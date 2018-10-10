@@ -1,4 +1,4 @@
-import {IController, IHttpResponse, IPromise} from "angular";
+import {IController, IPromise} from "angular";
 import {ITopicService} from "../../../interfaces/services/topic-service.interface";
 import {ITopicScope} from "./topic.scope";
 import {TopicResolver} from "./topic.resolver";
@@ -12,13 +12,14 @@ import {IUiService} from "../../../interfaces/services/ui-service.interface";
 import {IReplyService} from "../../../interfaces/services/reply-service.interface";
 
 import {cloneDeep} from 'lodash';
-import {Topic} from "../../../models/entities/topic";
 import {AddReplyViewModel} from "../../../view-models/add-reply.view-model";
 import {User} from "../../../models/entities/user";
 import {LoadUserViewModel} from "../../../view-models/users/load-user.view-model";
 import {IUserService} from "../../../interfaces/services/user-service.interface";
-import {UserRole} from "../../../enums/user-role.enum";
 import {UrlStateConstant} from "../../../constants/url-state.constant";
+import {SortViewModel} from "../../../view-models/sort.view-model";
+import {ReplySortProperty} from "../../../enums/order/reply-sort-property.enum";
+import {SortDirection} from "../../../enums/order/sort-direction.enum";
 
 /* @ngInject */
 export class TopicController implements IController {
@@ -45,11 +46,18 @@ export class TopicController implements IController {
         $scope.loadTopicRepliesResult = new SearchResult<Reply>();
 
         // Initialize search condition.
+        let pagination = new Pagination();
+        pagination.page = 1;
+        pagination.records = PaginationConstant.topicReplies;
+
+        let sort = new SortViewModel<ReplySortProperty>();
+        sort.property = ReplySortProperty.createdTime;
+        sort.direction = SortDirection.ascending;
+
         let loadTopicRepliesCondition = new LoadReplyViewModel();
         loadTopicRepliesCondition.topicIds = [topic.id];
-        loadTopicRepliesCondition.pagination = new Pagination();
-        loadTopicRepliesCondition.pagination.page = 1;
-        loadTopicRepliesCondition.pagination.records = PaginationConstant.topicReplies;
+        loadTopicRepliesCondition.pagination = pagination;
+        loadTopicRepliesCondition.sort = sort;
         $scope.loadTopicRepliesCondition = loadTopicRepliesCondition;
 
         // Method binding.
@@ -95,35 +103,8 @@ export class TopicController implements IController {
         // Add loading screen.
         this.$ui.blockAppUI();
 
-        // Caching result
-        let loadReplyResult = new SearchResult<Reply>();
-        let mIdToUserMap: { [id: number]: User } = {};
-
         this._loadTopicReplies()
-            .then((loadTopicRepliesResult: SearchResult<Reply>) => {
-                loadReplyResult = loadTopicRepliesResult;
-                return loadTopicRepliesResult.records;
-            })
-            .catch(() => {
-                return new Array<Reply>();
-            })
-            .then((replies: Reply[]) => {
-                let loadUserConditions = new LoadUserViewModel();
-                let ownerIds = replies.map((reply: Reply) => reply.ownerId);
-                loadUserConditions.ids = [this.$scope.topic.ownerId].concat(ownerIds);
-
-                this.$user
-                    .loadUsers(loadUserConditions)
-                    .then((loadUsersResult: SearchResult<User>) => {
-                        // Get users list.
-                        let users = loadUsersResult.records;
-                        for (let user of users)
-                            mIdToUserMap[user.id] = user;
-                    });
-            })
             .finally(() => {
-                this.$scope.mIdToUserMap = mIdToUserMap;
-                this.$scope.loadTopicRepliesResult = loadReplyResult;
                 this.$ui.unblockAppUI();
             })
     };
@@ -153,6 +134,9 @@ export class TopicController implements IController {
             .then((reply: Reply) => {
                 // Clear model.
                 this.$scope.addQuickReply = '';
+
+                // Reload replies list.
+                return this._loadTopicReplies()
             })
             .finally(() => {
                 this.$ui.unblockAppUI();
@@ -167,11 +151,42 @@ export class TopicController implements IController {
     /*
     * Load topic replies base on the existing condition.
     * */
-    private _loadTopicReplies = (): IPromise<SearchResult<Reply>> => {
+    private _loadTopicReplies = (): IPromise<void> => {
         // Load topic replies.
         let loadTopicRepliesCondition = cloneDeep(this.$scope.loadTopicRepliesCondition);
+
+        // Caching result
+        let loadReplyResult = new SearchResult<Reply>();
+        let mIdToUserMap: { [id: number]: User } = {};
+
         return this.$reply
-            .loadReplies(loadTopicRepliesCondition);
+            .loadReplies(loadTopicRepliesCondition)
+            .then((loadTopicRepliesResult: SearchResult<Reply>) => {
+                loadReplyResult = loadTopicRepliesResult;
+                return loadTopicRepliesResult.records;
+            })
+            .then((replies: Reply[]) => {
+                let loadUserConditions = new LoadUserViewModel();
+                let ownerIds = replies.map((reply: Reply) => reply.ownerId);
+                loadUserConditions.ids = [this.$scope.topic.ownerId].concat(ownerIds);
+
+                this.$user
+                    .loadUsers(loadUserConditions)
+                    .then((loadUsersResult: SearchResult<User>) => {
+                        // Get users list.
+                        let users = loadUsersResult.records;
+                        for (let user of users)
+                            mIdToUserMap[user.id] = user;
+                    });
+            })
+            .catch(() => {
+                this.$scope.mIdToUserMap = mIdToUserMap;
+                this.$scope.loadTopicRepliesResult = new SearchResult<Reply>();
+            })
+            .then(() => {
+                this.$scope.mIdToUserMap = mIdToUserMap;
+                this.$scope.loadTopicRepliesResult = loadReplyResult;
+            })
     }
 
     //#endregion

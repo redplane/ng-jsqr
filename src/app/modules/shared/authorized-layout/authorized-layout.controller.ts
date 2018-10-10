@@ -49,7 +49,9 @@ export class AuthorizedLayoutController implements IController {
         this.$state.go(UrlStateConstant.loginModuleName);
     };
 
-    // Called when register is clicked.
+    /*
+    * Called when register is clicked.
+    * */
     private _ngOnRegisterClicked = (): void => {
         this.$state.go(UrlStateConstant.accountRegisterModuleName);
     };

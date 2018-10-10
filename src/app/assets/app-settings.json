@@ -1,5 +1,5 @@
 {
-  "apiEndPoint": "http://vlqy5vs38b4xkhqra-mock.stoplight-proxy.io",
+  "apiEndPoint": "http://localhost:61356",
   "captchaPublicKey": "6LfgV2gUAAAAACS_PGjH2iHJJwPXQGvEzP4FB83E",
 
   "clientIdGoogle": "772965944359-iqnumj8hq21vee3k2h2hqr2del9eo5ks.apps.googleusercontent.com",

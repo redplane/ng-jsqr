@@ -106,7 +106,10 @@ export class UserService implements IUserService {
     * If id is not specified, requester profile is fetched.
     * */
     public loadUserProfile(id?: number): IPromise<User> {
-        // Construct url.
+
+        if (!id)
+            id = 0;
+
         // Construct url.
         let url = `${this.appSettingConstant.apiEndPoint}/api/user/${id}`;
         return this.$http

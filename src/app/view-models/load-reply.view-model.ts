@@ -1,4 +1,6 @@
 import {Pagination} from "../models/pagination";
+import {SortViewModel} from "./sort.view-model";
+import {ReplySortProperty} from "../enums/order/reply-sort-property.enum";
 
 export class LoadReplyViewModel {
 
@@ -22,7 +24,12 @@ export class LoadReplyViewModel {
     /*
     * Pagination information.
     * */
-    public pagination: Pagination = new Pagination();
+    public pagination: Pagination;
+
+    /*
+    * Sort information.
+    * */
+    public sort: SortViewModel<ReplySortProperty>;
 
     //endregion
 
