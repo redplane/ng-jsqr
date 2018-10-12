@@ -10,6 +10,7 @@ import {SearchResult} from "../../../models/search-result";
 import {Ng1ViewDeclaration} from "@uirouter/angularjs/lib/interface";
 import {PersonalFollowingTopicsController} from "./following-topics/following-topics.controller";
 import {FollowingCategoriesController} from "./following-categories/following-categories.controller";
+import {ProfileResolver} from "./profile.resolver";
 
 /* @ngInject */
 export class ProfileModule {
@@ -163,44 +164,29 @@ export class ProfileModule {
                     /*
                     * Load profile by using id.
                     * */
-                    profile: ($stateParams: StateParams, $state: StateService, $user: IUserService): User | IPromise<User> => {
+                    routeResolver: ($stateParams: StateParams, $state: StateService, $user: IUserService): ProfileResolver | IPromise<ProfileResolver> => {
 
                         // Get profile id.
                         let profileId = parseInt($stateParams.profileId);
-                        if (profileId == null)
+
                         // Profile is not valid.
-                            if (!profileId) {
+                        if (!profileId)
+                            profileId = 0;
 
-                                // Get current user profile.
-                                $user.loadUserProfile(profileId)
-                                    .then((user: User) => {
-                                        return user;
-                                    })
-                                    .catch(() => {
-                                        $state.go(UrlStateConstant.dashboardModuleName);
-                                    });
-                                return null;
-                            }
+                        // Initialize route resolver.
+                        let routeResolver = new ProfileResolver();
 
-                        // Build load user conditions.
-                        let loadUsersCondition = new LoadUserViewModel();
-                        let pagination = new Pagination();
-                        pagination.page = 1;
-                        pagination.records = 1;
-
-                        loadUsersCondition.ids = [profileId];
-                        return $user.loadUsers(loadUsersCondition)
-                            .then((loadUsersResult: SearchResult<User>) => {
-                                let users = loadUsersResult.records;
-                                if (!users)
-                                    throw 'No user has been found';
-
-                                return users[0];
+                        // Get current user profile.
+                        return $user
+                            .loadUserProfile(profileId)
+                            .then((user: User) => {
+                                routeResolver.user = user;
+                                return routeResolver;
                             })
                             .catch(() => {
                                 $state.go(UrlStateConstant.dashboardModuleName);
-                                return null;
-                            })
+                                throw 'Cannot find user profile';
+                            });
                     }
                 },
                 parent: UrlStateConstant.authorizedLayoutModuleName

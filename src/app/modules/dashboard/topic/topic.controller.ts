@@ -33,13 +33,15 @@ export class TopicController implements IController {
 
     public constructor(public $topic: ITopicService, public $reply: IReplyService, public $user: IUserService,
                        public $ui: IUiService,
-                       loadTopicResolver: TopicResolver,
+                       topicDetailResolver: TopicResolver,
                        public $state: StateService,
                        public $scope: ITopicScope) {
 
         // Property binding.
-        let topic = loadTopicResolver.topic;
+        let topic = topicDetailResolver.topic;
         $scope.topic = topic;
+        $scope.category = topicDetailResolver.category;
+
         $scope.addQuickReply = '';
         $scope.bIsEditorInPreviewMode = false;
         $scope.bIsEditorCollapsed = false;
@@ -61,13 +63,14 @@ export class TopicController implements IController {
         $scope.loadTopicRepliesCondition = loadTopicRepliesCondition;
 
         // Method binding.
-        $scope.ngOnAddReplyClicked = this._ngOnAddReplyClicked;
         $scope.ngOnInit = this._ngOnInit;
         $scope.ngOnToggleEditorPreviewMode = this._ngOnToggleEditorPreviewMode;
         $scope.ngOnRepliesPageChanged = this._ngOnRepliesPageChanged;
         $scope.ngOnEditorToggleClicked = this._ngOnEditorToggleClicked;
         $scope.ngOnAddReplyClicked = this._ngOnAddTopicReplyClicked;
         $scope.ngOnProfileClicked = this._ngOnProfileClicked;
+        $scope.ngOnHomeClicked = this._ngOnHomeClicked;
+        $scope.ngOnCategoryClicked = this._ngOnCategoryClicked;
     }
 
     //#endregion
@@ -79,13 +82,6 @@ export class TopicController implements IController {
     * */
     private _ngOnInit = (): void => {
         this._ngOnRepliesPageChanged();
-    };
-
-    /*
-    * Called when add reply is clicked.
-    * */
-    private _ngOnAddReplyClicked = (): void => {
-
     };
 
     /*
@@ -149,6 +145,28 @@ export class TopicController implements IController {
     };
 
     /*
+    * Called when home is clicked.
+    * */
+    private _ngOnHomeClicked = (): void => {
+        this.$ui.blockAppUI();
+
+        this.$state.go(UrlStateConstant.dashboardModuleName)
+            .then(() => this.$ui.unblockAppUI())
+            .catch(() => this.$ui.unblockAppUI());
+    };
+
+    /*
+    * Called when category is clicked.
+    * */
+    private _ngOnCategoryClicked = (categoryId: number) => {
+        this.$ui.blockAppUI();
+
+        this.$state.go(UrlStateConstant.categoryDetailModuleName, {categoryId: categoryId})
+            .then(() => this.$ui.unblockAppUI())
+            .catch(() => this.$ui.unblockAppUI());
+    };
+
+    /*
     * Load topic replies base on the existing condition.
     * */
     private _loadTopicReplies = (): IPromise<void> => {
@@ -187,7 +205,8 @@ export class TopicController implements IController {
                 this.$scope.mIdToUserMap = mIdToUserMap;
                 this.$scope.loadTopicRepliesResult = loadReplyResult;
             })
-    }
+    };
+
 
     //#endregion
 }

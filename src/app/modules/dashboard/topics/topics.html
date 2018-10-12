@@ -1,8 +1,12 @@
 <div ng-init="ngOnInit()">
     <div>
         <ol class="breadcrumb">
-            <li><a href>Home</a></li>
-            <li class="active"><a href>Category 01</a></li>
+            <li ng-click="ngOnHomeClicked()">
+                <span class="fa fa-home"></span> <a href>{{'TITLE_HOME' | translate}}</a>
+            </li>
+            <li>
+                <a href>{{categoryGroup.name}}</a>
+            </li>
         </ol>
     </div>
 
@@ -10,8 +14,7 @@
     <div>
         <h1 class="topics-title">
             <a href>
-                Your first
-                forum
+                {{category.name}}
             </a>
         </h1>
     </div>
@@ -22,7 +25,7 @@
             <button class="btn btn-primary btn-add-topic"
                     ng-click="ngOnAddTopicClicked()">
                 <span class="fa fa-plus"></span>
-                <span>New topic</span>
+                <span>{{'TITLE_NEW_TOPIC' | translate}}</span>
             </button>
         </div>
         <div class="col-xs-8">
@@ -60,14 +63,14 @@
                     <div class="box-body">
                         <div class="col-md-10 col-sm-8 topic-main-info">
                             <div class="topic-image">
-                                <img src="https://via.placeholder.com/64x64"/>
+                                <img ng-src="{{mIdToUser[topic.ownerId].photo}}"/>
                             </div>
-                            <div class="topic-title"
-                                 ng-click="ngOnTopicTitleClicked(topic.id)">
-                                <a href class="main-title">{{topic.title}}</a>
+                            <div class="topic-title">
+                                <a href class="main-title"
+                                   ng-click="ngOnTopicTitleClicked(topic.id)">{{topic.title}}</a>
                                 <div class="topic-creator">
                                     &raquo;
-                                    <a href ng-click="ngOnProfileClicked(profile.id)">
+                                    <a href ng-click="ngOnProfileClicked(topic.ownerId)">
                                     <small>{{mIdToUser[topic.ownerId].nickname}}</small>
                                 </a>
                                 </div>
@@ -109,7 +112,7 @@
             <button class="btn btn-primary btn-add-topic"
                     ng-click="ngOnAddTopicClicked()">
                 <span class="fa fa-plus"></span>
-                <span>New topic</span>
+                <span>{{'TITLE_NEW_TOPIC' | translate}}</span>
             </button>
         </div>
         <div class="col-xs-8">

@@ -3,6 +3,8 @@ import {SearchResult} from "../../../models/search-result";
 import {Topic} from "../../../models/entities/topic";
 import {LoadTopicViewModel} from "../../../view-models/load-topic.view-model";
 import {User} from "../../../models/entities/user";
+import {CategoryGroup} from "../../../models/entities/category-group";
+import {Category} from "../../../models/entities/category";
 
 export interface ITopicsScope extends IScope{
 
@@ -22,6 +24,16 @@ export interface ITopicsScope extends IScope{
     * Mapping between id and user.
     * */
     mIdToUser: {[id: number]: User};
+
+    /*
+    * Category which is resolved from route.
+    * */
+    categoryGroup: CategoryGroup;
+
+    /*
+    * Loaded category.
+    * */
+    category: Category;
 
     //#endregion
 
@@ -52,6 +64,11 @@ export interface ITopicsScope extends IScope{
 
     // Called when profile is clicked.
     ngOnProfileClicked: (profileId: number) => void;
+
+    /*
+    * Called when home is clicked.
+    * */
+    ngOnHomeClicked: () => void;
 
     //#endregion
 

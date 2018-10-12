@@ -23,10 +23,10 @@ export class UrlStateConstant {
     public static profileTopicsModuleName: string = 'profile-topics';
 
     // Category topic module name.
-    public static categoryTopicModuleName: string = 'topics';
+    public static categoryDetailModuleName: string = 'category';
 
     // Category topic module url.
-    public static categoryTopicModuleUrl: string = '/topics';
+    public static categoryDetailModuleUrl: string = '/category/:categoryId';
 
     // Topic module.
     public static topicModuleUrl: string = '/topic/:topicId';
@@ -41,7 +41,7 @@ export class UrlStateConstant {
     public static followingCategoriesModuleName: string = 'following-categories';
 
     // Add topic url.
-    public static addTopicModuleUrl: string = '/add-topic';
+    public static addTopicModuleUrl: string = '/add-topic/:categoryId';
 
     // Add topic module name.
     public static addTopicModuleName: string = 'add-topic';

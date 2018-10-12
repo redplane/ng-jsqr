@@ -1,4 +1,5 @@
 import {Pagination} from "../models/pagination";
+import {ItemStatus} from "../enums/item-status.enum";
 
 export class LoadCategoryViewModel {
 
@@ -10,6 +11,9 @@ export class LoadCategoryViewModel {
     // List of topics group indexes.
     public categoryGroupIds: Array<number> | null;
 
+    // List of item statuses.
+    public statuses: Array<ItemStatus> | null;
+
     // Pagination.
     public pagination: Pagination | null;
 
@@ -18,6 +22,7 @@ export class LoadCategoryViewModel {
     //#region Constructor
 
     public constructor(){
+        this.ids = null;
         this.categoryGroupIds = null;
         this.pagination = new Pagination();
     }

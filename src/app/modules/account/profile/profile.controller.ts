@@ -1,9 +1,9 @@
-import {IAngularEvent, IController, IRootElementService} from "angular";
+import {IAngularEvent, IController} from "angular";
 import {User} from "../../../models/entities/user";
 import {IProfileScope} from "./profile.scope";
 import {IUserService} from "../../../interfaces/services/user-service.interface";
-import {IModalService, IModalSettings, IModalInstanceService} from "angular-ui-bootstrap";
-import {FileItem, FileUploaderFactory} from 'angular-file-upload';
+import {IModalInstanceService, IModalService, IModalSettings} from "angular-ui-bootstrap";
+import {FileUploaderFactory} from 'angular-file-upload';
 import {IFileService} from "../../../interfaces/services/file-service.interface";
 import {IUiService} from "../../../interfaces/services/ui-service.interface";
 import {IToastrService} from "angular-toastr";
@@ -11,6 +11,9 @@ import {TokenViewModel} from "../../../view-models/users/token.view-model";
 import {ILocalStorageService} from "angular-local-storage";
 import {LocalStorageKeyConstant} from "../../../constants/local-storage-key.constant";
 import {UrlStateConstant} from "../../../constants/url-state.constant";
+import {UploadProfileImageViewModel} from "../../../view-models/users/upload-profile-image.view-model";
+import {UserRole} from "../../../enums/user-role.enum";
+import {ProfileResolver} from "./profile.resolver";
 
 /* @ngInject */
 export class ProfileController implements IController {
@@ -28,6 +31,7 @@ export class ProfileController implements IController {
     //#region Constructor
 
     public constructor(public profile: User,
+                       public routeResolver: ProfileResolver,
                        public $uibModal: IModalService, public toastr: IToastrService,
                        public $translate: angular.translate.ITranslateService, public localStorageService: ILocalStorageService,
                        public $user: IUserService,
@@ -37,7 +41,7 @@ export class ProfileController implements IController {
         // Properties binding.
         $scope.urlStateConstant = UrlStateConstant;
 
-        $scope.user = profile;
+        $scope.user = routeResolver.user;
         $scope.availableUserStatuses = $user.loadUserAvailableStatuses();
         $scope.blobProfileImage = null;
         $scope.encodedProfileImage = '';
@@ -61,6 +65,7 @@ export class ProfileController implements IController {
         $scope.ngIsAbleToResetCroppedImage = this._ngIsAbleToResetCroppedImage;
         $scope.ngOnResetOriginalImageClicked = this._ngOnResetOriginalImageClicked;
         $scope.ngOnChangePasswordClicked = this._ngOnChangePasswordClicked;
+        $scope.ngIsAbleToChangeProfileImage = this._ngIsAbleToChangeProfileImage;
     }
 
     //#endregion
@@ -124,8 +129,12 @@ export class ProfileController implements IController {
         // Block screen access.
         this.$ui.blockAppUI();
 
-        this.$user.uploadProfileImage(blobProfileImage)
-            .then((photo: string) => {
+        let model = new UploadProfileImageViewModel();
+        model.photo = blobProfileImage;
+        model.userId = this.$scope.user.id;
+
+        this.$user.uploadProfileImage(model)
+            .then((photoUrl: string) => {
                 // Get translated message.
                 let message = this.$translate.instant('MSG_PROFILE_IMAGE_UPLOADED_SUCCESSFULLY');
                 this.toastr.success(message);
@@ -135,6 +144,9 @@ export class ProfileController implements IController {
                     this._uploadProfileImageModal.dismiss();
                     this._uploadProfileImageModal = null;
                 }
+
+                // Update user profile image.
+                this.$scope.user.photo = photoUrl;
             })
             .finally(() => {
                 this.$ui.unblockAppUI();
@@ -180,12 +192,33 @@ export class ProfileController implements IController {
                 this.localStorageService.set<TokenViewModel>(LocalStorageKeyConstant.accessTokenKey, token);
 
                 // Display success message.
-                let message = this.$translate.instant('MSG_PAsSWORD_CHANGED_SUCCESSFULLY');
+                let message = this.$translate.instant('MSG_PASSWORD_CHANGED_SUCCESSFULLY');
                 this.toastr.success(message);
             })
             .catch(() => {
             })
     };
 
+    // Check whether view can change profile image or not.
+    private _ngIsAbleToChangeProfileImage = (): boolean => {
+        if (this.profile.id == this.$scope.user.id)
+            return true;
+
+        if (this.profile.role == UserRole.admin)
+            return true;
+
+        return false;
+    };
+
+    // Check whether user is able to change profile password or not.
+    private _ngIsAbleToChangePassword = (): boolean => {
+        if (this.profile.id == this.$scope.user.id)
+            return true;
+
+        if (this.profile.role == UserRole.admin)
+            return true;
+
+        return false;
+    }
     //#endregion
 }

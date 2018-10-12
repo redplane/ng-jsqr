@@ -11,6 +11,7 @@ import {BasicRegisterViewModel} from "../view-models/users/basic-register.view-m
 import {UserRole} from "../enums/user-role.enum";
 import {UserStatus} from "../enums/user-status.enum";
 import {ChangePasswordViewModel} from "../view-models/users/change-password.view-model";
+import {UploadProfileImageViewModel} from "../view-models/users/upload-profile-image.view-model";
 
 /* @ngInject */
 export class UserService implements IUserService {
@@ -128,14 +129,15 @@ export class UserService implements IUserService {
     }
 
     // Upload user profile image.
-    public uploadProfileImage(blob: any): IPromise<string> {
+    public uploadProfileImage(model: UploadProfileImageViewModel): IPromise<string> {
         let url = `${this.appSettingConstant.apiEndPoint}/api/user/upload-avatar`;
         let options: IRequestShortcutConfig = {};
         options.headers = {};
         options.headers['Content-Type'] = undefined;
 
         let fd = new FormData();
-        fd.set('image', blob);
+        fd.append('photo', model.photo);
+        fd.append('userId', `${model.userId}`);
 
         return this.$http
             .post(url, fd, options)

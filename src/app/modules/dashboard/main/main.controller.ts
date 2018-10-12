@@ -14,12 +14,12 @@ import {CategoryGroup} from "../../../models/entities/category-group";
 import {Category} from "../../../models/entities/category";
 import {StateService} from "@uirouter/core";
 import {UrlStateConstant} from "../../../constants/url-state.constant";
+import {ItemStatus} from "../../../enums/item-status.enum";
 
 /* @ngInject */
 export class MainController implements IController {
 
     //#region Properties
-
 
     //#endregion
 
@@ -75,6 +75,7 @@ export class MainController implements IController {
                 // Get the list of categories ids.
                 let loadCategoriesCondition = new LoadCategoryViewModel();
                 loadCategoriesCondition.pagination = null;
+                loadCategoriesCondition.statuses = [ItemStatus.available];
                 loadCategoriesCondition.categoryGroupIds = categoryGroups.map((categoryGroup) => categoryGroup.id);
 
                 return this.$category
@@ -104,7 +105,7 @@ export class MainController implements IController {
     * Called when category is clicked.
     * */
     private _ngOnCategoryClicked = (categoryId: number): void => {
-        this.$state.go(UrlStateConstant.categoryTopicModuleName, {categoryId: categoryId});
+        this.$state.go(UrlStateConstant.categoryDetailModuleName, {categoryId: categoryId});
     };
 
     //#endregion

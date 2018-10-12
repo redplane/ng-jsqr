@@ -5,6 +5,7 @@ import {Reply} from "../../../models/entities/reply";
 import {LoadReplyViewModel} from "../../../view-models/load-reply.view-model";
 import {User} from "../../../models/entities/user";
 import {UserRole} from "../../../enums/user-role.enum";
+import {Category} from "../../../models/entities/category";
 
 export interface ITopicScope extends IScope {
 
@@ -14,6 +15,11 @@ export interface ITopicScope extends IScope {
     * Topic information on page.
     * */
     topic: Topic;
+
+    /*
+    * Category to which topic belongs to.
+    * */
+    category: Category;
 
     /*
     * Quick reply content.
@@ -79,6 +85,16 @@ export interface ITopicScope extends IScope {
 
     // Called when profile is clicked.
     ngOnProfileClicked: (profileId: number) => void;
+
+    /*
+    * Called when home is clicked.
+    * */
+    ngOnHomeClicked: () => void;
+
+    /*
+    * Called when category is clicked.
+    * */
+    ngOnCategoryClicked: (categoryId: number) => void;
 
     //#endregion
 }

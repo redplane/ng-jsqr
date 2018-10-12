@@ -1,4 +1,5 @@
 import {Topic} from "../../../models/entities/topic";
+import {Category} from "../../../models/entities/category";
 
 export class TopicResolver {
 
@@ -9,6 +10,10 @@ export class TopicResolver {
     * */
     topic: Topic | null;
 
+    /*
+    * Category to which topic belongs.
+    * */
+    category: Category | null;
 
     //#endregion
 

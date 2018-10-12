@@ -60,6 +60,12 @@ export interface IProfileScope extends IScope {
     // Called when change password is clicked.
     ngOnChangePasswordClicked(): void;
 
+    // Check whether viewer can change profile image or not.
+    ngIsAbleToChangeProfileImage(): boolean;
+
+    // Check whether user can change profile password or not.
+    ngIsAbleToChangePassword(): boolean;
+
     //#endregion
 
 }

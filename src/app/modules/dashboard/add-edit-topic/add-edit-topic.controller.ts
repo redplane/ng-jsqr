@@ -9,6 +9,8 @@ import {SearchResult} from "../../../models/search-result";
 import {ICategoryService} from "../../../interfaces/services/category-service.interface";
 import {IUiService} from "../../../interfaces/services/ui-service.interface";
 import {ITopicService} from "../../../interfaces/services/topic-service.interface";
+import {ItemStatus} from "../../../enums/item-status.enum";
+import {AddEditTopicResolver} from "./add-edit-topic.resolver";
 
 /* @ngInject */
 export class AddEditTopicController implements IController {
@@ -27,10 +29,13 @@ export class AddEditTopicController implements IController {
                        public $scope: IAddEditTopicScope,
                        public $ui: IUiService,
                        public $category: ICategoryService, public $topic: ITopicService,
-                       topic: Topic | null) {
+                       routeResolver: AddEditTopicResolver | null) {
         // Property binding.
 
-        $scope.topic = topic ? topic : new Topic();
+        $scope.topic = routeResolver.topic ? routeResolver.topic : new Topic();
+        $scope.category =routeResolver.category;
+        $scope.topic.categoryId = $scope.category.id;
+
         $scope.bIsInPreviewMode = false;
 
         // Methods binding.
@@ -63,7 +68,7 @@ export class AddEditTopicController implements IController {
             this.$topic.addTopic(topic)
                 .then((topic: Topic) => {
                     // Redirect user to category.
-                    this.$state.go(UrlStateConstant.categoryTopicModuleName);
+                    this.$state.go(UrlStateConstant.categoryDetailModuleName, {categoryId: topic.categoryId});
                 })
                 .finally(() => {
                     this.$ui.unblockAppUI();
@@ -104,27 +109,19 @@ export class AddEditTopicController implements IController {
         }
 
         // Redirect to topics page.
-        this.$state.go(UrlStateConstant.categoryTopicModuleName);
+        this.$state.go(UrlStateConstant.categoryDetailModuleName);
 
     };
 
     // Called when component is initialized.
     private _ngOnInit = (): void => {
-        // Display loader.
-        this.$ui.blockAppUI();
-
-        this._loadCategories()
-            .then((categories: Category[]) => {
-                this.$scope.categories = categories;
-            })
-            .finally(() => {
-                this.$ui.unblockAppUI();
-            });
     };
 
     // Load all selectable categories.
     private _loadCategories(): IPromise<Category[]> {
         let conditions = new LoadCategoryViewModel();
+        conditions.statuses = [ItemStatus.available];
+
         return this.$category
             .loadCategories(conditions)
             .then((loadCategoriesResult: SearchResult<Category>) => {

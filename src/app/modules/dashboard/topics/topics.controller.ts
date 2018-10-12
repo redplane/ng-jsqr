@@ -15,9 +15,14 @@ import {IUserService} from "../../../interfaces/services/user-service.interface"
 import {Pagination} from "../../../models/pagination";
 import {PaginationConstant} from "../../../constants/pagination.constant";
 import {ICategoryService} from "../../../interfaces/services/category-service.interface";
+import {CategoryGroupDetailResolver} from "../../../models/resolvers/category-group-detail.resolver";
 
 /* @ngInject */
 export class TopicsController implements IController {
+
+    //#region Properties
+
+    //#endregion
 
     //#region Constructor
 
@@ -26,26 +31,31 @@ export class TopicsController implements IController {
     * */
     public constructor(public $scope: ITopicsScope,
                        public $state: StateService,
-                       public $topic: ITopicService, public $user: IUserService, public $category: ICategoryService,
-                       public $ui: IUiService) {
+                       public $topic: ITopicService, public $user: IUserService,
+                       public $ui: IUiService,
+                       public routeResolver: CategoryGroupDetailResolver) {
 
         $scope.loadTopicsResult = new SearchResult<Topic>();
 
         let pagination = new Pagination();
         pagination.page = 1;
         pagination.records = PaginationConstant.topics;
-
         let loadTopicsCondition = new LoadTopicViewModel();
         loadTopicsCondition.pagination = pagination;
-
         $scope.loadTopicsCondition = loadTopicsCondition;
 
+        // Properties binding.
+        $scope.categoryGroup = routeResolver.categoryGroup;
+        $scope.category = routeResolver.category;
+
+        // Methods binding.
         $scope.ngOnInit = this._ngOnInit;
         $scope.ngOnAddTopicClicked = this._ngOnAddTopicClicked;
         $scope.ngOnTopicTitleClicked = this._ngOnTopicTitleClicked;
         $scope.ngOnTopicsPageChanged = this._ngOnTopicsPageChanged;
         $scope.ngOnEditTopicClicked = this._ngOnEditTopicClicked;
         $scope.ngOnProfileClicked = this._ngOnProfileIsClicked;
+        $scope.ngOnHomeClicked = this._ngOnHomeClicked;
     }
 
     //#endregion
@@ -73,7 +83,7 @@ export class TopicsController implements IController {
     * Called when add topic button is clicked.
     * */
     private _ngOnAddTopicClicked = (): void => {
-        this.$state.go(UrlStateConstant.addTopicModuleName);
+        this.$state.go(UrlStateConstant.addTopicModuleName, {categoryId: this.$scope.category.id});
     };
 
     /*
@@ -106,6 +116,23 @@ export class TopicsController implements IController {
     private _ngOnProfileIsClicked = (profileId: number) => {
         // Go to profile page.
         this.$state.go(UrlStateConstant.profileModuleName, {profileId: profileId});
+    };
+
+    /*
+    * Called when home is clicked.
+    * */
+    private _ngOnHomeClicked = () => {
+
+        // Block UI.
+        this.$ui.blockAppUI();
+
+        this.$state.go(UrlStateConstant.dashboardModuleName)
+            .then(() => {
+                this.$ui.unblockAppUI();
+            })
+            .catch(() => {
+                this.$ui.unblockAppUI();
+            });
     };
 
     /*
@@ -154,6 +181,11 @@ export class TopicsController implements IController {
     private _loadTopicsCreators(topics: Array<Topic>): IPromise<User[]> {
         let conditions = new LoadUserViewModel();
         conditions.ids = topics.map((topic) => topic.ownerId);
+
+        let loadUserPagination = new Pagination();
+        loadUserPagination.records = PaginationConstant.maxRecords;
+        loadUserPagination.page = 1;
+        conditions.pagination = loadUserPagination;
 
         return this.$user
             .loadUsers(conditions)

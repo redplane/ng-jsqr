@@ -33,7 +33,24 @@ export class CategoryService implements ICategoryService {
                     throw 'No topics has been found';
 
                 return loadCategoriesResponse.data;
-            })
+            });
+    }
+
+    /*
+    * Load category using id.
+    * */
+    public loadCategoryUsingId(id: number): IPromise<Category> {
+        // Build url.
+        let fullUrl = `${this.appSettingConstant.apiEndPoint}/api/category/${id}`;
+
+        return this.$http
+            .get(fullUrl)
+            .then((loadCategoryResponse: IHttpResponse<Category>) => {
+                if (!loadCategoryResponse || !loadCategoryResponse.data)
+                    throw 'No topic has been found';
+
+                return loadCategoryResponse.data;
+            });
     }
 
     //#endregion

@@ -10,7 +10,8 @@
                                      ng-src="{{user.photo}}"/>
                             </div>
                         </div>
-                        <div class="box-footer text-center">
+                        <div class="box-footer text-center"
+                             ng-if="ngIsAbleToChangeProfileImage()">
                             <button class="btn btn-info"
                                     ng-click="ngOnUploadProfileModalClicked()">
                                 <span class="fa fa-camera"></span>
@@ -66,6 +67,7 @@
                                        ng-disabled="true"/>
                                 <span class="input-group-btn">
                                     <button class="btn btn-primary"
+                                            ng-disabled="!ngIsAbleToChangeProfileImage()"
                                             ng-click="ngOnChangePasswordClicked()">
                                         <span class="fa fa-edit"></span>
                                     </button>
@@ -85,6 +87,7 @@
                                 <span class="fa fa-sun-o"></span>
                             </span>
                                 <select class="form-control"
+                                        ng-disabled="true"
                                         ng-model="user.status"
                                         ng-options="item as item | toUserStatus | translate for item in availableUserStatuses">
 

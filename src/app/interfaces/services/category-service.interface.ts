@@ -8,6 +8,11 @@ export interface ICategoryService {
     //#region Methods
 
     /*
+    * Load category using id.
+    * */
+    loadCategoryUsingId(id: number) : IPromise<Category>;
+
+    /*
     * Load categories by using specific conditions.
     * */
     loadCategories(loadCategoriesCondition: LoadCategoryViewModel): IPromise<SearchResult<Category>>;

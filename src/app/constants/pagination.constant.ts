@@ -15,6 +15,8 @@ export class PaginationConstant {
 
     public static followingCategories: number = 30;
 
+    public static maxRecords: number = 30;
+
     //#endregion
 
 }

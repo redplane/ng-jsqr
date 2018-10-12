@@ -1,4 +1,4 @@
-import {StateProvider} from "@uirouter/angularjs";
+import {StateProvider, StateService} from "@uirouter/angularjs";
 import {UrlStateConstant} from "../../../constants/url-state.constant";
 import {IPromise, module} from 'angular';
 import {IUserService} from "../../../interfaces/services/user-service.interface";
@@ -9,6 +9,10 @@ import {LoadTopicViewModel} from "../../../view-models/load-topic.view-model";
 import {Pagination} from "../../../models/pagination";
 import {SearchResult} from "../../../models/search-result";
 import {Topic} from "../../../models/entities/topic";
+import {AddEditTopicResolver} from "./add-edit-topic.resolver";
+import {ICategoryService} from "../../../interfaces/services/category-service.interface";
+import {LoadCategoryViewModel} from "../../../view-models/load-category.view-model";
+import {Category} from "../../../models/entities/category";
 
 /* @ngInject */
 export class AddEditTopicModule {
@@ -51,8 +55,37 @@ export class AddEditTopicModule {
                         });
                     },
 
-                    topic: (): null => {
-                        return null;
+                    routeResolver: ($stateParams: StateParams,
+                                    $state: StateService, $category: ICategoryService): IPromise<AddEditTopicResolver> | null => {
+
+                        // No category is found.
+                        if (!$stateParams['categoryId']) {
+                            $state.go(UrlStateConstant.dashboardModuleName);
+                            throw 'No category is found to contain topic';
+                        }
+
+                        let iCategoryId = parseInt($stateParams['categoryId']);
+                        if (!iCategoryId) {
+                            $state.go(UrlStateConstant.dashboardModuleName);
+                            throw 'No category is found to contain topic';
+                        }
+
+                        let resolver = new AddEditTopicResolver();
+                        let loadCategoryCondition = new LoadCategoryViewModel();
+                        loadCategoryCondition.ids = [iCategoryId];
+                        loadCategoryCondition.pagination = new Pagination();
+                        loadCategoryCondition.pagination.page = 1;
+                        loadCategoryCondition.pagination.records = 1;
+
+                        return $category.loadCategories(loadCategoryCondition)
+                            .then((loadCategoriesResult: SearchResult<Category>) => {
+                                if (!loadCategoriesResult || !loadCategoriesResult.records)
+                                    throw 'No category is found to contain topic';
+
+                                resolver.category = loadCategoriesResult.records[0];
+                                return resolver;
+                            })
+
                     }
                 }
             });
@@ -93,9 +126,9 @@ export class AddEditTopicModule {
                     /*
                     * Topic information.
                     * */
-                    topic: ($stateParams: StateParams,
-                            $user: IUserService,
-                            $topic: ITopicService): Topic | IPromise<Topic> => {
+                    routeResolver: ($stateParams: StateParams,
+                                    $user: IUserService,
+                                    $topic: ITopicService, $category: ICategoryService):  IPromise<AddEditTopicResolver> | null => {
 
                         let topicId = parseInt($stateParams.topicId);
 
@@ -107,6 +140,9 @@ export class AddEditTopicModule {
                         loadTopicsCondition.ids = [topicId];
                         loadTopicsCondition.pagination = pagination;
 
+                        // Initialize resolver.
+                        let addEditTopicResolver = new AddEditTopicResolver();
+
                         return $topic
                             .loadTopics(loadTopicsCondition)
                             .then((loadTopicsResult: SearchResult<Topic>) => {
@@ -114,7 +150,18 @@ export class AddEditTopicModule {
                                 if (!topics)
                                     throw 'No topic has been found';
 
-                                return topics[0];
+                                const topic = topics[0];
+                                addEditTopicResolver.topic = topic;
+
+                                return $category
+                                    .loadCategoryUsingId(topic.id)
+                            })
+                            .then((category: Category) => {
+                                addEditTopicResolver.category = category;
+                                return addEditTopicResolver;
+                            })
+                            .catch(() => {
+                                return null;
                             });
                     }
                 }

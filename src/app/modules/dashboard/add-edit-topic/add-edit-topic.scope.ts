@@ -9,8 +9,8 @@ export interface IAddEditTopicScope extends IScope {
     // Topic information.
     topic: Topic;
 
-    // Selectable categories.
-    categories: Category[];
+    // Selected category.
+    category: Category;
 
     // Add/edit form
     addEditForm: IFormController;
