@@ -4,6 +4,8 @@ import {SearchResult} from "../models/search-result";
 import {Topic} from "../models/entities/topic";
 import {IHttpResponse, IHttpService, IPromise} from "angular";
 import {AppSetting} from "../models/app-setting";
+import {LoadTopicSummaryViewModel} from "../view-models/load-topic-summary.view-model";
+import {TopicSummary} from "../models/entities/topic-summary";
 
 /* @ngInject */
 export class TopicService implements ITopicService {
@@ -65,6 +67,24 @@ export class TopicService implements ITopicService {
                 return loadTopicsResult;
             });
     };
+
+    // Load topic summaries using specific condition.
+    public loadTopicSummaries(condition: LoadTopicSummaryViewModel): IPromise<SearchResult<TopicSummary>> {
+        // Construct url.
+        let url = `${this.appSettingConstant.apiEndPoint}/api/topic-summary/search`;
+        return this.$http
+            .post(url, condition)
+            .then((loadTopicSummariesResponse: IHttpResponse<SearchResult<TopicSummary>>) => {
+                if (!loadTopicSummariesResponse)
+                    throw 'No topic summaries group has been found';
+
+                let loadTopicSummariesResult = loadTopicSummariesResponse.data;
+                if (!loadTopicSummariesResult || !loadTopicSummariesResult.records)
+                    throw 'No topic summaries has been found';
+
+                return loadTopicSummariesResult;
+            });
+    }
 
     //#endregion
 }

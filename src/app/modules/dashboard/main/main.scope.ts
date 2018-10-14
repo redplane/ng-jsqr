@@ -3,6 +3,7 @@ import {SearchResult} from "../../../models/search-result";
 import {CategoryGroup} from "../../../models/entities/category-group";
 import {LoadCategoryGroupViewModel} from "../../../view-models/load-category-group.view-model";
 import {Category} from "../../../models/entities/category";
+import {CategorySummary} from "../../../models/entities/category-summary";
 
 export interface IMainScope extends IScope {
 
@@ -23,6 +24,11 @@ export interface IMainScope extends IScope {
     * */
     mCategoryGroupIdToCategoriesMap: {[id: number]: Array<Category>};
 
+    /*
+    * Mapping of id to summary category.
+    * */
+    mIdToCategorySummaryMap: {[id: number]: CategorySummary};
+
     //#endregion
 
     //#region Methods
@@ -41,6 +47,14 @@ export interface IMainScope extends IScope {
     * Called when category is clicked.
     * */
     ngOnCategoryClicked(categoryId: number): void;
+
+    ngGetCategoryTotalPost(categoryId: number): number;
+
+    ngGetCategoryLastTopicTitle(categoryId: number): string;
+
+    ngGetCategoryLastTopicCreatedTime(categoryId: number): number;
+
+    ngOnTopicClicked(categoryId: number): number;
 
     //#endregion
 }

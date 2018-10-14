@@ -66,6 +66,9 @@ export interface IProfileScope extends IScope {
     // Check whether user can change profile password or not.
     ngIsAbleToChangePassword(): boolean;
 
+    // Check whether user is able to see following topics.
+    ngIsAbleToSeeFollowingTopics(): boolean;
+
     //#endregion
 
 }

@@ -3,6 +3,8 @@ import {LoadCategoryViewModel} from "../view-models/load-category.view-model";
 import {SearchResult} from "../models/search-result";
 import {Category} from "../models/entities/category";
 import {IHttpResponse, IHttpService, IPromise} from "angular";
+import {LoadCategorySummaryViewModel} from "../view-models/category/load-category-summary.view-model";
+import {CategorySummary} from "../models/entities/category-summary";
 
 /* @ngInject */
 export class CategoryService implements ICategoryService {
@@ -47,9 +49,26 @@ export class CategoryService implements ICategoryService {
             .get(fullUrl)
             .then((loadCategoryResponse: IHttpResponse<Category>) => {
                 if (!loadCategoryResponse || !loadCategoryResponse.data)
-                    throw 'No topic has been found';
+                    throw 'No category has been found';
 
                 return loadCategoryResponse.data;
+            });
+    }
+
+    /*
+    * Load category summaries using specific condition.
+    * */
+    public loadCategorySummaries(loadCategorySummariesCondition: LoadCategorySummaryViewModel): IPromise<SearchResult<CategorySummary>> {
+        // Build url.
+        const fullUrl = `${this.appSettingConstant.apiEndPoint}/api/category-summary/search`;
+
+        return this.$http
+            .post(fullUrl, loadCategorySummariesCondition)
+            .then((loadCategorySummariesResult: IHttpResponse<SearchResult<CategorySummary>>) => {
+                if (!loadCategorySummariesResult || !loadCategorySummariesResult.data)
+                    throw 'No category summary has been found';
+
+                return loadCategorySummariesResult.data;
             });
     }
 

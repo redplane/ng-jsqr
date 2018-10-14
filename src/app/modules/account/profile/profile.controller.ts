@@ -36,7 +36,7 @@ export class ProfileController implements IController {
                        public $translate: angular.translate.ITranslateService, public localStorageService: ILocalStorageService,
                        public $user: IUserService,
                        public $file: IFileService, public $ui: IUiService,
-                       public $scope: IProfileScope, public FileUploader: FileUploaderFactory){
+                       public $scope: IProfileScope, public FileUploader: FileUploaderFactory) {
 
         // Properties binding.
         $scope.urlStateConstant = UrlStateConstant;
@@ -66,6 +66,7 @@ export class ProfileController implements IController {
         $scope.ngOnResetOriginalImageClicked = this._ngOnResetOriginalImageClicked;
         $scope.ngOnChangePasswordClicked = this._ngOnChangePasswordClicked;
         $scope.ngIsAbleToChangeProfileImage = this._ngIsAbleToChangeProfileImage;
+        $scope.ngIsAbleToSeeFollowingTopics = this._ngIsAbleToSeeFollowingTopics;
     }
 
     //#endregion
@@ -100,7 +101,7 @@ export class ProfileController implements IController {
         // File item is invalid.
         let file = fileItem._file;
         this.$file.toEncodedFile(file)
-            .then((base64EncodedFile: string| ArrayBuffer) => {
+            .then((base64EncodedFile: string | ArrayBuffer) => {
                 this.$scope.originalProfileImage = <string> base64EncodedFile;
             })
             .finally(() => {
@@ -140,7 +141,7 @@ export class ProfileController implements IController {
                 this.toastr.success(message);
 
                 // Dismiss the modal dialog.
-                if (this._uploadProfileImageModal){
+                if (this._uploadProfileImageModal) {
                     this._uploadProfileImageModal.dismiss();
                     this._uploadProfileImageModal = null;
                 }
@@ -154,7 +155,7 @@ export class ProfileController implements IController {
     };
 
     // Check whether user is able to reset cropped image or not.
-    private _ngIsAbleToResetCroppedImage = (originalImage: string): boolean  =>{
+    private _ngIsAbleToResetCroppedImage = (originalImage: string): boolean => {
         // No image has been selected.
         if (!originalImage)
             return false;
@@ -212,6 +213,17 @@ export class ProfileController implements IController {
 
     // Check whether user is able to change profile password or not.
     private _ngIsAbleToChangePassword = (): boolean => {
+        if (this.profile.id == this.$scope.user.id)
+            return true;
+
+        if (this.profile.role == UserRole.admin)
+            return true;
+
+        return false;
+    };
+
+    // Check whether current viewer is able to see following topics.
+    private _ngIsAbleToSeeFollowingTopics = (): boolean => {
         if (this.profile.id == this.$scope.user.id)
             return true;
 

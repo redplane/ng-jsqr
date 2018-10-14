@@ -3,6 +3,8 @@ import {SearchResult} from "../../models/search-result";
 import {Topic} from "../../models/entities/topic";
 import {IPromise} from "angular";
 import {UrlStateConstant} from "../../constants/url-state.constant";
+import {LoadTopicSummaryViewModel} from "../../view-models/load-topic-summary.view-model";
+import {TopicSummary} from "../../models/entities/topic-summary";
 
 export interface ITopicService {
 
@@ -16,6 +18,9 @@ export interface ITopicService {
 
     // Load topics using specific conditions.
     loadTopics(loadTopicsCondition: LoadTopicViewModel): IPromise<SearchResult<Topic>>;
+
+    // Load topic summaries using specific conditions.
+    loadTopicSummaries(condition: LoadTopicSummaryViewModel): IPromise<SearchResult<TopicSummary>>;
 
     //#endregion
 

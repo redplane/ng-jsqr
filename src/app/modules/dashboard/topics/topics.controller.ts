@@ -1,4 +1,4 @@
-import {IController, IPromise} from "angular";
+import {IController, IPromise, IQService} from "angular";
 import {IUiService} from "../../../interfaces/services/ui-service.interface";
 import {Topic} from "../../../models/entities/topic";
 import {SearchResult} from "../../../models/search-result";
@@ -14,8 +14,9 @@ import {LoadUserViewModel} from "../../../view-models/users/load-user.view-model
 import {IUserService} from "../../../interfaces/services/user-service.interface";
 import {Pagination} from "../../../models/pagination";
 import {PaginationConstant} from "../../../constants/pagination.constant";
-import {ICategoryService} from "../../../interfaces/services/category-service.interface";
 import {CategoryGroupDetailResolver} from "../../../models/resolvers/category-group-detail.resolver";
+import {TopicSummary} from "../../../models/entities/topic-summary";
+import {LoadTopicSummaryViewModel} from "../../../view-models/load-topic-summary.view-model";
 
 /* @ngInject */
 export class TopicsController implements IController {
@@ -32,7 +33,7 @@ export class TopicsController implements IController {
     public constructor(public $scope: ITopicsScope,
                        public $state: StateService,
                        public $topic: ITopicService, public $user: IUserService,
-                       public $ui: IUiService,
+                       public $ui: IUiService, public $q: IQService,
                        public routeResolver: CategoryGroupDetailResolver) {
 
         $scope.loadTopicsResult = new SearchResult<Topic>();
@@ -56,6 +57,8 @@ export class TopicsController implements IController {
         $scope.ngOnEditTopicClicked = this._ngOnEditTopicClicked;
         $scope.ngOnProfileClicked = this._ngOnProfileIsClicked;
         $scope.ngOnHomeClicked = this._ngOnHomeClicked;
+        $scope.ngGetTopicFollowersSummary = this._ngGetTopicFollowersSummary;
+        $scope.ngGetTopicRepliesSummary = this._ngGetTopicRepliesSummary;
     }
 
     //#endregion
@@ -146,6 +149,10 @@ export class TopicsController implements IController {
         // Id to user map.
         let mIdToUserMap: { [id: number]: User } = {};
 
+        // Topic id to topic summary map.
+        let mTopicIdToTopicSummaryMap: {[topicId: number]: TopicSummary} = {};
+
+
         // Load topics.
         let oLoadTopicResult = new SearchResult<Topic>();
 
@@ -159,19 +166,26 @@ export class TopicsController implements IController {
                 // Get topics list.
                 let topics = loadTopicsResult.records;
 
-                //#region Load user who
-
-                this._loadTopicsCreators(topics)
+                let loadTopicsCreatorsPromise = this._loadTopicsCreators(topics)
                     .then((users: User[]) => {
                         for (let user of users)
                             mIdToUserMap[user.id] = user;
                     });
 
-                //#endregion
+                let loadTopicsSummariesPromise = this._loadTopicsSummaries(topics)
+                    .then((topicSummaries: TopicSummary[]) => {
+                        for (let topicSummary of topicSummaries){
+                            mTopicIdToTopicSummaryMap[topicSummary.topicId] = topicSummary;
+                        }
+                    });
+
+                return this.$q
+                    .all([loadTopicsCreatorsPromise, loadTopicsSummariesPromise]);
             })
             .then(() => {
                 this.$scope.mIdToUser = mIdToUserMap;
                 this.$scope.loadTopicsResult = oLoadTopicResult;
+                this.$scope.mTopicIdToTopicSummary = mTopicIdToTopicSummaryMap;
             });
     }
 
@@ -193,6 +207,43 @@ export class TopicsController implements IController {
                 return loadUsersResult.records;
             });
     };
+
+    /*
+    * Load topics summaries using specific condtions.
+    * */
+    private _loadTopicsSummaries(topics: Array<Topic>): IPromise<TopicSummary[]> {
+        let condition = new LoadTopicSummaryViewModel();
+        condition.topicIds = topics.map(topic => topic.id);
+        condition.pagination = null;
+
+        return this.$topic
+            .loadTopicSummaries(condition)
+            .then((loadTopicSummariesResult: SearchResult<TopicSummary>) => {
+                return loadTopicSummariesResult.records;
+            });
+    };
+
+    /*
+    * Load topic replies summary.
+    * */
+    private _ngGetTopicRepliesSummary = (topicId: number): number => {
+        let mTopicIdToTopicSummary = this.$scope.mTopicIdToTopicSummary;
+        if (!mTopicIdToTopicSummary || !mTopicIdToTopicSummary[topicId])
+            return 0;
+
+        return mTopicIdToTopicSummary[topicId].topicReply || 0;
+    };
+
+    /*
+    * Load topic followers summary.
+    * */
+    private _ngGetTopicFollowersSummary = (topicId: number): number => {
+        let mTopicIdToTopicSummary = this.$scope.mTopicIdToTopicSummary;
+        if (!mTopicIdToTopicSummary || !mTopicIdToTopicSummary[topicId])
+            return 0;
+
+        return mTopicIdToTopicSummary[topicId].totalFollower || 0;
+    }
 
 
     //#endregion

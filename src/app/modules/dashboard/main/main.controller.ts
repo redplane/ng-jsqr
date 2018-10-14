@@ -15,6 +15,8 @@ import {Category} from "../../../models/entities/category";
 import {StateService} from "@uirouter/core";
 import {UrlStateConstant} from "../../../constants/url-state.constant";
 import {ItemStatus} from "../../../enums/item-status.enum";
+import {LoadCategorySummaryViewModel} from "../../../view-models/category/load-category-summary.view-model";
+import {CategorySummary} from "../../../models/entities/category-summary";
 
 /* @ngInject */
 export class MainController implements IController {
@@ -44,6 +46,10 @@ export class MainController implements IController {
         // Methods mapping.
         $scope.ngOnInit = this._ngOnInit;
         $scope.ngOnCategoryClicked = this._ngOnCategoryClicked;
+        $scope.ngGetCategoryTotalPost = this._ngGetCategoryTotalPost;
+        $scope.ngGetCategoryLastTopicTitle = this._ngGetCategoryLastTopicTitle;
+        $scope.ngGetCategoryLastTopicCreatedTime = this._ngGetCategoryLastTopicCreatedTime;
+
     }
 
     //#endregion
@@ -64,6 +70,7 @@ export class MainController implements IController {
         // Initialize search condition.
         let loadCategoryGroupsResult = new SearchResult<CategoryGroup>();
         let mCategoryGroupIdToCategoriesMap: { [id: number]: Array<Category> } = {};
+        let mIdToCategorySummaryMap: {[id: number] : CategorySummary} = {};
 
         this.$categoryGroup
             .loadCategoryGroups(loadCategoryGroupCondition)
@@ -95,6 +102,21 @@ export class MainController implements IController {
 
                 this.$scope.loadCategoryGroupsResult = loadCategoryGroupsResult;
                 this.$scope.mCategoryGroupIdToCategoriesMap = mCategoryGroupIdToCategoriesMap;
+
+                // Get category summaries.
+                let loadCategorySummariesCondition = new LoadCategorySummaryViewModel();
+                loadCategorySummariesCondition.categoryIds = categories.map(x => x.id);
+                return this.$category
+                    .loadCategorySummaries(loadCategorySummariesCondition)
+                    .then((loadCategorySummariesResult: SearchResult<CategorySummary>) => {
+                        return loadCategorySummariesResult.records;
+                    });
+            })
+            .then((categorySummaries: CategorySummary[]) => {
+                for (let categorySummary of categorySummaries)
+                    mIdToCategorySummaryMap[categorySummary.categoryId] = categorySummary;
+
+                this.$scope.mIdToCategorySummaryMap = mIdToCategorySummaryMap;
             })
             .finally(() => {
                 this.$ui.unblockAppUI();
@@ -108,6 +130,29 @@ export class MainController implements IController {
         this.$state.go(UrlStateConstant.categoryDetailModuleName, {categoryId: categoryId});
     };
 
+    private _ngGetCategoryTotalPost = (categoryId: number): number => {
+        let mIdToCategorySummaryMap= this.$scope.mIdToCategorySummaryMap;
+        if (!mIdToCategorySummaryMap || !mIdToCategorySummaryMap[categoryId])
+            return 0;
+
+        return mIdToCategorySummaryMap[categoryId].totalPost;
+    };
+
+    private _ngGetCategoryLastTopicTitle = (categoryId: number): string => {
+        let mIdToCategorySummaryMap= this.$scope.mIdToCategorySummaryMap;
+        if (!mIdToCategorySummaryMap || !mIdToCategorySummaryMap[categoryId])
+            return '';
+
+        return mIdToCategorySummaryMap[categoryId].lastTopicTitle;
+    };
+
+    private _ngGetCategoryLastTopicCreatedTime = (categoryId: number): number => {
+        let mIdToCategorySummaryMap= this.$scope.mIdToCategorySummaryMap;
+        if (!mIdToCategorySummaryMap || !mIdToCategorySummaryMap[categoryId])
+            return null;
+
+        return mIdToCategorySummaryMap[categoryId].lastTopicCreatedTime;
+    }
     //#endregion
 
     //#endregion

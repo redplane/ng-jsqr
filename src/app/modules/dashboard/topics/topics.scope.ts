@@ -5,6 +5,8 @@ import {LoadTopicViewModel} from "../../../view-models/load-topic.view-model";
 import {User} from "../../../models/entities/user";
 import {CategoryGroup} from "../../../models/entities/category-group";
 import {Category} from "../../../models/entities/category";
+import {CategorySummary} from "../../../models/entities/category-summary";
+import {TopicSummary} from "../../../models/entities/topic-summary";
 
 export interface ITopicsScope extends IScope{
 
@@ -24,6 +26,11 @@ export interface ITopicsScope extends IScope{
     * Mapping between id and user.
     * */
     mIdToUser: {[id: number]: User};
+
+    /*
+    * Mapping between topic id & topic summary.
+    * */
+    mTopicIdToTopicSummary: {[id: number]: TopicSummary};
 
     /*
     * Category which is resolved from route.
@@ -69,6 +76,10 @@ export interface ITopicsScope extends IScope{
     * Called when home is clicked.
     * */
     ngOnHomeClicked: () => void;
+
+    ngGetTopicRepliesSummary: (topicId: number) => number;
+
+    ngGetTopicFollowersSummary: (topicId: number) => number;
 
     //#endregion
 

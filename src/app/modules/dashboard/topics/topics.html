@@ -55,7 +55,6 @@
                                     <li ng-click="ngOnEditTopicClicked(topic.id)">
                                         <a href>{{'TITLE_EDIT_TOPIC' | translate}}</a>
                                     </li>
-                                    <li><a href="#">Something else here</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -71,12 +70,12 @@
                                 <div class="topic-creator">
                                     &raquo;
                                     <a href ng-click="ngOnProfileClicked(topic.ownerId)">
-                                    <small>{{mIdToUser[topic.ownerId].nickname}}</small>
-                                </a>
+                                        <small>{{mIdToUser[topic.ownerId].nickname}}</small>
+                                    </a>
                                 </div>
                                 <div>
                                     &raquo; <a href>
-                                    <small>2018-01-01</small>
+                                    <small>{{topic.createdTime | amUtc | amDateFormat:'MM/DD/YYYY HH:mm'}}</small>
                                 </a>
                                 </div>
                             </div>
@@ -84,17 +83,17 @@
 
                         <div class="col-md-1 col-sm-2 col-xs-6 topic-views">
                             <div>
-                                <span class="views-number"> 1216 </span>
+                                <span class="views-number"> {{ngGetTopicRepliesSummary(topic.id)}} </span>
                                 <div>
-                                    <small>Replies</small>
+                                    <small>{{'TITLE_REPLIES' | translate}}</small>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-1 col-sm-2 col-xs-6 topic-views">
                             <div>
-                                <span class="views-number"> 368 </span>
+                                <span class="views-number"> {{ngGetTopicFollowersSummary(topic.id)}} </span>
                                 <div>
-                                    <small>Followers</small>
+                                    <small>{{'TITLE_FOLLOWERS' | translate}}</small>
                                 </div>
                             </div>
                         </div>
@@ -128,8 +127,12 @@
 
     <div>
         <ol class="breadcrumb">
-            <li><a href>Home</a></li>
-            <li class="active"><a href>Category 01</a></li>
+            <li ng-click="ngOnHomeClicked()">
+                <span class="fa fa-home"></span> <a href>{{'TITLE_HOME' | translate}}</a>
+            </li>
+            <li>
+                <a href>{{categoryGroup.name}}</a>
+            </li>
         </ol>
     </div>
 </div>
