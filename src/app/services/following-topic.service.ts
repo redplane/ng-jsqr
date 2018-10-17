@@ -21,7 +21,7 @@ export class FollowingTopicService implements IFollowingTopicService {
 
     // Load following categories using specific conditions.
     public loadFollowingCategories(loadFollowingTopicCondition: LoadFollowingTopicViewModel): IPromise<SearchResult<FollowingTopic>> {
-        let url = `${this.appSettingConstant.apiEndPoint}/following-topic/search`;
+        let url = `${this.appSettingConstant.apiEndPoint}/api/follow-topic/search`;
         return this.$http
             .post(url, loadFollowingTopicCondition)
             .then((loadFollowingTopicResponse: IHttpResponse<SearchResult<FollowingTopic>>) => {

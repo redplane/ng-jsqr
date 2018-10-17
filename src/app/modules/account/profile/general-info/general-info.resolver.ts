@@ -1,6 +1,6 @@
-import {User} from "../../../models/entities/user";
+import {User} from "../../../../models/entities/user";
 
-export class ProfileResolver {
+export class GeneralInfoResolver {
 
     //#region Properties
 

@@ -10,7 +10,7 @@ import {SearchResult} from "../../../models/search-result";
 import {Ng1ViewDeclaration} from "@uirouter/angularjs/lib/interface";
 import {PersonalFollowingTopicsController} from "./following-topics/following-topics.controller";
 import {FollowingCategoriesController} from "./following-categories/following-categories.controller";
-import {ProfileResolver} from "./profile.resolver";
+import {GeneralInfoResolver} from "./general-info/general-info.resolver";
 
 /* @ngInject */
 export class ProfileModule {
@@ -48,9 +48,9 @@ export class ProfileModule {
                     // lazy load the view
                     require.ensure([], () => {
 
-                        require('./profile.scss');
+                        require('./general-info/general-info.scss');
                         require('ui-cropper/compile/unminified/ui-cropper.css');
-                        resolve(require('./profile.html'));
+                        resolve(require('./general-info/general-info.html'));
                     });
                 });
             }],
@@ -99,6 +99,34 @@ export class ProfileModule {
             controller: 'followingCategoriesController'
         };
 
+        // Profile notification
+        views[`${UrlStateConstant.profileTopicsModuleName}@${UrlStateConstant.profileModuleName}`] = {
+            templateProvider: ['$q', ($q) => {
+                // We have to inject $q service manually due to some reasons that ng-annotate cannot add $q service in production mode.
+                return $q((resolve) => {
+                    // lazy load the view
+                    require.ensure([], () => {
+                        resolve(require('./topics/topics.html'));
+                    });
+                });
+            }],
+            controller: 'profileTopicsController'
+        };
+
+        // Profile notification
+        views[`${UrlStateConstant.profileNotificationsModuleName}@${UrlStateConstant.profileModuleName}`] = {
+            templateProvider: ['$q', ($q) => {
+                // We have to inject $q service manually due to some reasons that ng-annotate cannot add $q service in production mode.
+                return $q((resolve) => {
+                    // lazy load the view
+                    require.ensure([], () => {
+                        resolve(require('./notifications/profile-notification.html'));
+                    });
+                });
+            }],
+            controller: 'profileNotificationsController'
+        };
+
         //#endregion
 
         $stateProvider
@@ -135,8 +163,8 @@ export class ProfileModule {
                                 // load only controller module
                                 let ngModule = module('account.profile', ['angularFileUpload', 'uiCropper']);
 
-                                const {ProfileController} = require('./profile.controller.ts');
-                                ngModule.controller('profileController', ProfileController);
+                                const {ProfileGeneralInfoController} = require('./general-info/general-info.controller.ts');
+                                ngModule.controller('profileController', ProfileGeneralInfoController);
 
                                 const {ChangePasswordController} = require('./change-password/change-password.controller.ts');
                                 ngModule.controller('changePasswordController', ChangePasswordController);
@@ -191,10 +219,25 @@ export class ProfileModule {
                         });
                     },
 
+                    // Load following categories controller.
+                    loadProfileNotificationMessageController: ($q: IQService, $ocLazyLoad) => {
+                        return $q((resolve) => {
+                            require.ensure([], () => {
+                                // load only controller module
+                                let ngModule = module('account.profile.notification-message', []);
+
+                                const {ProfileNotificationController} = require('./notifications/profile-notification.controller');
+                                ngModule.controller('profileNotificationsController', ProfileNotificationController);
+                                $ocLazyLoad.load({name: ngModule.name});
+                                resolve(ngModule.controller);
+                            });
+                        });
+                    },
+
                     /*
                     * Load profile by using id.
                     * */
-                    routeResolver: ($stateParams: StateParams, $state: StateService, $user: IUserService): ProfileResolver | IPromise<ProfileResolver> => {
+                    routeResolver: ($stateParams: StateParams, $state: StateService, $user: IUserService): GeneralInfoResolver | IPromise<GeneralInfoResolver> => {
 
                         // Get profile id.
                         let profileId = parseInt($stateParams.profileId);
@@ -204,7 +247,7 @@ export class ProfileModule {
                             profileId = 0;
 
                         // Initialize route resolver.
-                        let routeResolver = new ProfileResolver();
+                        let routeResolver = new GeneralInfoResolver();
 
                         // Get current user profile.
                         return $user

@@ -54,7 +54,7 @@
                                     </div>
                                     <div class="text-ellipsis">
                                         <b class="fa fa-clock-o"></b>&nbsp;
-                                        <i>{{'TITLE_CREATED_AT' | translate}}</i> {{ngGetCategoryLastTopicCreatedTime(category.id) | amUtc | amDateFormat:'MM/DD/YYYY HH:mm'}}
+                                        <i>{{'TITLE_CREATED_AT' | translate}}</i> {{ngGetCategoryLastTopicCreatedTime(category.id) | amUtc | amLocal | amDateFormat:'MM/DD/YYYY HH:mm'}}
                                     </div>
                                 </div>
                             </div>

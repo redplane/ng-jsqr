@@ -77,6 +77,7 @@ export class FollowingCategoriesController implements IController {
                 let followingCategories = loadFollowingCategoriesResult.records;
                 let loadCategoriesCondition = new LoadCategoryViewModel();
                 loadCategoriesCondition.ids = followingCategories.map(followingCategory => followingCategory.categoryId);
+                loadCategoriesCondition.pagination = null;
 
                 return this.$category
                     .loadCategories(loadCategoriesCondition);

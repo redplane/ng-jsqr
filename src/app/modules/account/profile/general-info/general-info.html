@@ -106,7 +106,7 @@
                             </span>
                     <input class="form-control"
                            ng-disabled="true"
-                           value="{{user.joinedTime | amUtc | amDateFormat:'MM.DD.YYYY HH:mm'}}">
+                           value="{{user.joinedTime | amUtc | amLocal | amDateFormat:'MM.DD.YYYY HH:mm'}}">
                 </div>
             </div>
         </div>
@@ -123,7 +123,7 @@
                             </span>
                     <input class="form-control"
                            ng-disabled="true"
-                           value="{{user.lastModifiedTime | amUtc | amDateFormat:'MM.DD.YYYY HH:mm'}}">
+                           value="{{user.lastModifiedTime | amUtc | amLocal | amDateFormat:'MM.DD.YYYY HH:mm'}}">
                 </div>
             </div>
         </div>

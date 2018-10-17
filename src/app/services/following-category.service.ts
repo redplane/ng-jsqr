@@ -19,7 +19,7 @@ export class FollowingCategoryService implements IFollowingCategoryService {
 
     // Load following categories.
     public loadFollowingCategories(condition: LoadFollowingCategoryViewModel): IPromise<SearchResult<FollowingCategory>> {
-        let url: string = `${this.appSettingConstant.apiEndPoint}/following-category/search`;
+        let url: string = `${this.appSettingConstant.apiEndPoint}/api/follow-category/search`;
         return this.$http
             .post(url, condition)
             .then((loadFollowingCategoriesResponse: IHttpResponse<SearchResult<FollowingCategory>>) => {

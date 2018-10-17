@@ -7,12 +7,10 @@ require('../../node_modules/bootstrap/dist/css/bootstrap.css');
 require('../../node_modules/admin-lte/dist/css/AdminLTE.css');
 require('../../node_modules/admin-lte/dist/css/skins/skin-green-light.css');
 
-require('../../node_modules/angular-toastr/dist/angular-toastr.css');
-
 // Font awesome.
 require('../../node_modules/font-awesome/css/font-awesome.css');
-require('../../node_modules/angular-block-ui/dist/angular-block-ui.css');
-require('../../node_modules/angular-confirm1/css/angular-confirm.css');
+
+
 require('../../node_modules/ui-cropper/compile/unminified/ui-cropper.css');
 require('../../node_modules/tinymce/skins/lightgray/skin.min.css');
 
@@ -38,6 +36,12 @@ $.ajax({
     crossDomain: false,
     success: (loadAppOptionResponse) => {
 
+        // Import angular plugin css.
+        require('../../node_modules/angular-confirm1/css/angular-confirm.css');
+        require('../../node_modules/angular-toastr/dist/angular-toastr.css');
+        require('../../node_modules/angular-block-ui/dist/angular-block-ui.css');
+
+
         // Angular plugins declaration.
         const angular = require('angular');
         require('@uirouter/angularjs');
@@ -54,6 +58,7 @@ $.ajax({
         require('angular-ui-tinymce');
         require('angular-local-storage');
         require('angular-recaptcha');
+        require('angular-slimscroll');
 
         // Bind the app setting to window object.
         window['_ngAppOptions'] = loadAppOptionResponse;
@@ -62,7 +67,7 @@ $.ajax({
         let ngModule = angular.module('ngApp', ['ui.router', 'blockUI', 'toastr',
             'ui.bootstrap', 'ngMessages', 'oc.lazyLoad', 'vcRecaptcha',
             'pascalprecht.translate', 'angularMoment', 'ngSanitize', 'ui.tinymce',
-            'cp.ngConfirm', 'LocalStorageModule']);
+            'cp.ngConfirm', 'LocalStorageModule', 'ngSlimScroll']);
 
         // Import url state constant
         const UrlStateConstant = require('./constants/url-state.constant.ts').UrlStateConstant;

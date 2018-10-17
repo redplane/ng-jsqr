@@ -1,10 +1,10 @@
 import {IAngularEvent, IFormController, IScope} from "angular";
-import {User} from "../../../models/entities/user";
-import {UserStatus} from "../../../enums/user-status.enum";
+import {User} from "../../../../models/entities/user";
+import {UserStatus} from "../../../../enums/user-status.enum";
 import {FileUploader} from "angular-file-upload";
-import {UrlStateConstant} from "../../../constants/url-state.constant";
+import {UrlStateConstant} from "../../../../constants/url-state.constant";
 
-export interface IProfileScope extends IScope {
+export interface IProfileGeneralInfoScope extends IScope {
 
     //#region Properties
 

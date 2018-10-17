@@ -27,10 +27,10 @@
                 <a href>{{topic.status | toItemStatusTitle | translate}}</a>
             </td>
             <td>
-                {{topic.createdTime | amUtc | amDateFormat:'MM/DD/YYYY HH:mm'}}
+                {{topic.createdTime | amUtc | amLocal | amDateFormat:'MM/DD/YYYY HH:mm'}}
             </td>
             <td>
-                {{topic.lastModifiedTime | amUtc | amDateFormat:'MM/DD/YYYY HH:mm'}}
+                {{topic.lastModifiedTime | amUtc | amLocal | amDateFormat:'MM/DD/YYYY HH:mm'}}
             </td>
             <td>
                 <button class="btn btn-info"

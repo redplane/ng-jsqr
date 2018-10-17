@@ -12,16 +12,16 @@
                             ng-click="ngSelectTab(urlStateConstant.profileTopicsModuleName)">
                             <a href>{{'TITLE_TOPIC' | translate}}</a>
                         </li>
-                        <li ng-class="{'active': ngIsTabActive(urlStateConstant.followingTopicsModuleName)}"
-                            ng-click="ngSelectTab(urlStateConstant.followingTopicsModuleName)">
+                        <li ng-class="{'active': ngIsTabActive(urlStateConstant.followingCategoriesModuleName)}"
+                            ng-click="ngSelectTab(urlStateConstant.followingCategoriesModuleName)">
                             <a href>{{'TITLE_FOLLOWING_CATEGORY' | translate}}</a>
                         </li>
-                        <li ng-class="{'active': ngIsTabActive(urlStateConstant.followingCategoriesModuleName)}"
-                            ng-click="ngSelectTab(urlStateConstant.followingCategoriesModuleName)">
+                        <li ng-class="{'active': ngIsTabActive(urlStateConstant.followingTopicsModuleName)}"
+                            ng-click="ngSelectTab(urlStateConstant.followingTopicsModuleName)">
                             <a href>{{'TITLE_FOLLOWING_TOPIC' | translate}}</a>
                         </li>
-                        <li ng-class="{'active': ngIsTabActive(urlStateConstant.followingCategoriesModuleName)}"
-                            ng-click="ngSelectTab(urlStateConstant.followingCategoriesModuleName)">
+                        <li ng-class="{'active': ngIsTabActive(urlStateConstant.profileNotificationsModuleName)}"
+                            ng-click="ngSelectTab(urlStateConstant.profileNotificationsModuleName)">
                             <a href>{{'TITLE_NOTIFICATION' | translate}}</a>
                         </li>
                     </ul>
@@ -37,6 +37,7 @@
                 <div ng-if="ngIsTabActive(urlStateConstant.profileTopicsModuleName)" ui-view="{{urlStateConstant.profileTopicsModuleName}}"></div>
                 <div ng-if="ngIsTabActive(urlStateConstant.followingTopicsModuleName)" ui-view="{{urlStateConstant.followingTopicsModuleName}}"></div>
                 <div ng-if="ngIsTabActive(urlStateConstant.followingCategoriesModuleName)" ui-view="{{urlStateConstant.followingCategoriesModuleName}}"></div>
+                <div ng-if="ngIsTabActive(urlStateConstant.profileNotificationsModuleName)" ui-view="{{urlStateConstant.profileNotificationsModuleName}}"></div>
             </div>
         </div>
     </div>

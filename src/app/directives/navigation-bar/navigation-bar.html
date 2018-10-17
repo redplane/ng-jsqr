@@ -19,10 +19,9 @@
                               ng-if="totalUnseenNotificationMessages">{{totalUnseenNotificationMessages}}</span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header">You have 4 messages</li>
-                        <li>
+                       <li>
                             <!-- inner menu: contains the actual data -->
-                            <ul class="menu">
+                            <ul class="menu" slim-scroll>
                                 <li ng-repeat="unseenNotificationMessage in unseenNotificationMessages">
                                     <a href="#">
                                         <div class="pull-left">

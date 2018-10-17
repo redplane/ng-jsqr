@@ -107,7 +107,7 @@ export class AuthorizedLayoutController implements IController {
                 console.log('Something wrong while establishing real-time connection.')
             });
 
-        // Load user notification.
+        // Load user notifications.
         this.$notificationMessage
             .loadNotificationMessages(this.$scope.loadNotificationMessagesCondition)
             .then((loadNotificationMessageResult: SearchResult<NotificationMessage>) => {

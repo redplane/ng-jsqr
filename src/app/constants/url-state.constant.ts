@@ -22,6 +22,8 @@ export class UrlStateConstant {
 
     public static profileTopicsModuleName: string = 'profile-topics';
 
+    public static profileNotificationsModuleName: string = 'profile-notifications';
+
     // Category topic module name.
     public static categoryDetailModuleName: string = 'category';
 

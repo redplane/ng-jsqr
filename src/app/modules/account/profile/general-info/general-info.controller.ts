@@ -1,22 +1,22 @@
 import {IAngularEvent, IController} from "angular";
-import {User} from "../../../models/entities/user";
-import {IProfileScope} from "./profile.scope";
-import {IUserService} from "../../../interfaces/services/user-service.interface";
+import {User} from "../../../../models/entities/user";
+import {IProfileGeneralInfoScope} from "./general-info.scope";
+import {IUserService} from "../../../../interfaces/services/user-service.interface";
 import {IModalInstanceService, IModalService, IModalSettings} from "angular-ui-bootstrap";
 import {FileUploaderFactory} from 'angular-file-upload';
-import {IFileService} from "../../../interfaces/services/file-service.interface";
-import {IUiService} from "../../../interfaces/services/ui-service.interface";
+import {IFileService} from "../../../../interfaces/services/file-service.interface";
+import {IUiService} from "../../../../interfaces/services/ui-service.interface";
 import {IToastrService} from "angular-toastr";
-import {TokenViewModel} from "../../../view-models/users/token.view-model";
+import {TokenViewModel} from "../../../../view-models/users/token.view-model";
 import {ILocalStorageService} from "angular-local-storage";
-import {LocalStorageKeyConstant} from "../../../constants/local-storage-key.constant";
-import {UrlStateConstant} from "../../../constants/url-state.constant";
-import {UploadProfileImageViewModel} from "../../../view-models/users/upload-profile-image.view-model";
-import {UserRole} from "../../../enums/user-role.enum";
-import {ProfileResolver} from "./profile.resolver";
+import {LocalStorageKeyConstant} from "../../../../constants/local-storage-key.constant";
+import {UrlStateConstant} from "../../../../constants/url-state.constant";
+import {UploadProfileImageViewModel} from "../../../../view-models/users/upload-profile-image.view-model";
+import {UserRole} from "../../../../enums/user-role.enum";
+import {GeneralInfoResolver} from "./general-info.resolver";
 
 /* @ngInject */
-export class ProfileController implements IController {
+export class ProfileGeneralInfoController implements IController {
 
     //#region Properties
 
@@ -31,12 +31,12 @@ export class ProfileController implements IController {
     //#region Constructor
 
     public constructor(public profile: User,
-                       public routeResolver: ProfileResolver,
+                       public routeResolver: GeneralInfoResolver,
                        public $uibModal: IModalService, public toastr: IToastrService,
                        public $translate: angular.translate.ITranslateService, public localStorageService: ILocalStorageService,
                        public $user: IUserService,
                        public $file: IFileService, public $ui: IUiService,
-                       public $scope: IProfileScope, public FileUploader: FileUploaderFactory) {
+                       public $scope: IProfileGeneralInfoScope, public FileUploader: FileUploaderFactory) {
 
         // Properties binding.
         $scope.urlStateConstant = UrlStateConstant;
@@ -54,9 +54,6 @@ export class ProfileController implements IController {
 
         profileImageUploader.onAfterAddingFile = this._ngOnAfterAddingProfileImage;
         $scope.profileImageUploader = profileImageUploader;
-
-        // Make no tab selected.
-        $scope.activeProfileTab = 0;
 
         // Method binding.
         $scope.ngOnUploadProfileModalClicked = this._ngOnUploadProfileModalClicked;

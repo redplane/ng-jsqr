@@ -19,6 +19,8 @@ export class PaginationConstant {
 
     public static maxNavBarNotificationMessages: number = 15;
 
+    public static notificationMessages: number = 30;
+
     //#endregion
 
 }

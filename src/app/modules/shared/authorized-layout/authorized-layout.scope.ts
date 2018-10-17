@@ -11,10 +11,10 @@ export interface IAuthorizedLayoutScope extends IScope {
     // Profile of current user.
     profile: User | null;
 
-    // Condition to load notification message.
+    // Condition to load notifications message.
     loadNotificationMessagesCondition: LoadNotificationMessageViewModel;
 
-    // List of notification messages belongs to user.
+    // List of notifications messages belongs to user.
     loadUnreadNotificationMessagesResult: SearchResult<NotificationMessage>;
 
     //#endregion

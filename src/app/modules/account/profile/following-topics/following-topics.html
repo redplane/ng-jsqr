@@ -16,7 +16,7 @@
                    ng-click="ngOnTopicClicked(topic.id)">{{topic.title}}</a>
             </td>
             <td>
-                <a href>{{followingTopic.createdTime}}</a>
+                <a href>{{followingTopic.createdTime | amUtc | amLocal  | amDateFormat:'MM/DD/YYYY HH:mm'}}</a>
             </td>
             <td>
                 <button class="btn btn-info"

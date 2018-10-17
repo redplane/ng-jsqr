@@ -54,7 +54,7 @@
                                     <div class="user-joined-date">
                                         <b>{{'TITLE_JOINED_TIME' | translate}} :</b>
                                         <span>&nbsp;</span>
-                                        <span>{{mIdToUserMap[topic.ownerId].joinedTime | amUtc | amDateFormat:'MM/DD/YYYY HH:mm'}}</span>
+                                        <span>{{mIdToUserMap[topic.ownerId].joinedTime | amUtc | amLocal | amDateFormat:'MM/DD/YYYY HH:mm'}}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-10 col-sm-9 col-xs-12">
@@ -74,7 +74,7 @@
                                                     <span class="fa fa-clock-o"></span>
                                                 </th>
                                                 <td>
-                                                    <span class="time">{{topic.createdTime | amUtc | amDateFormat:'MM/DD/YYYY HH:mm'}}</span>
+                                                    <span class="time">{{topic.createdTime | amUtc | amLocal | amDateFormat:'MM/DD/YYYY HH:mm'}}</span>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -118,7 +118,7 @@
                                 <div class="user-joined-date">
                                     <b>{{'TITLE_JOINED_TIME' | translate}}:</b>
                                     <span>&nbsp;</span>
-                                    <span>{{mIdToUserMap[topic.ownerId].joinedTime | amUtc | amDateFormat:'MM/DD/YYYY HH:mm'}}</span>
+                                    <span>{{mIdToUserMap[topic.ownerId].joinedTime | amUtc | amLocal | amDateFormat:'MM/DD/YYYY HH:mm'}}</span>
                                 </div>
                             </div>
                             <div class="col-md-10 col-sm-9 col-xs-12">
@@ -138,7 +138,7 @@
                                                 <span class="fa fa-clock-o"></span>
                                             </th>
                                             <td>
-                                                <span class="time">{{reply.createdTime | amUtc | amDateFormat:'MM/DD/YYYY HH:mm'}}</span>
+                                                <span class="time">{{reply.createdTime | amUtc | amLocal | amDateFormat:'MM/DD/YYYY HH:mm'}}</span>
                                             </td>
                                         </tr>
                                         </tbody>

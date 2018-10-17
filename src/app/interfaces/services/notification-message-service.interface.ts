@@ -8,12 +8,12 @@ export interface INotificationMessageService {
     //#region Methods
 
     /*
-    * Load user notification messages using specific conditions.
+    * Load user notifications messages using specific conditions.
     * */
     loadNotificationMessages(condition: LoadNotificationMessageViewModel): IPromise<SearchResult<NotificationMessage>>;
 
     /*
-    * Mark notification message as seen.
+    * Mark notifications message as seen.
     * */
     markNotificationMessageAsSeen(id: string): IPromise<void>;
 

@@ -18,7 +18,7 @@ export class NotificationMessageService implements INotificationMessageService {
     //#region Methods
 
     /*
-    * Load notification messages using specific conditions.
+    * Load notifications messages using specific conditions.
     * */
     public loadNotificationMessages(condition: LoadNotificationMessageViewModel): IPromise<SearchResult<NotificationMessage>> {
         const fullUrl = `${this.appSettingConstant.apiEndPoint}/api/notification-message/search`;
@@ -26,14 +26,14 @@ export class NotificationMessageService implements INotificationMessageService {
             .post(fullUrl, condition)
             .then((loadNotificationMessageResponse: IHttpResponse<SearchResult<NotificationMessage>>) => {
                 if (!loadNotificationMessageResponse || !loadNotificationMessageResponse.data)
-                    throw 'Cannot load notification messages.';
+                    throw 'Cannot load notifications messages.';
 
                 return loadNotificationMessageResponse.data;
             });
     };
 
     /*
-    * Mark notification message as read by searching for its id.
+    * Mark notifications message as read by searching for its id.
     * */
     public markNotificationMessageAsSeen(id: string): IPromise<void> {
         const fullUrl = `${this.appSettingConstant.apiEndPoint}/api/notification-message/mark-as-seen/${id}`;
