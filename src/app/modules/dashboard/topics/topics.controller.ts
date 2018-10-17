@@ -42,6 +42,7 @@ export class TopicsController implements IController {
         pagination.page = 1;
         pagination.records = PaginationConstant.topics;
         let loadTopicsCondition = new LoadTopicViewModel();
+        loadTopicsCondition.categoryIds = [routeResolver.category.id];
         loadTopicsCondition.pagination = pagination;
         $scope.loadTopicsCondition = loadTopicsCondition;
 

@@ -116,6 +116,7 @@ export class PersonalTopicsController implements IController {
                 // Load categories condition.
                 let loadCategoriesCondition = new LoadCategoryViewModel();
                 loadCategoriesCondition.ids = topics.map((topic: Topic) => topic.categoryId);
+                loadCategoriesCondition.pagination = null;
                 promises[0] = this.$category
                     .loadCategories(loadCategoriesCondition)
                     .then((loadCategoriesResult: SearchResult<Category>) => {

@@ -29,4 +29,7 @@ module.exports = (ngModule) => {
 
     const {AuthService} = require('./auth.service');
     ngModule.service('$auth', AuthService);
+
+    const {NotificationMessageService} = require('./notification-message.service');
+    ngModule.service('$notificationMessage', NotificationMessageService);
 };

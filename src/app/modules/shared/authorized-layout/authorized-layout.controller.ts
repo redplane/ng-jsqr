@@ -9,6 +9,13 @@ import {IRealTimeService} from "../../../interfaces/services/real-time-service.i
 import {RealTimeConstant} from "../../../constants/real-time.constant";
 import {RealTimeEventConstant} from "../../../constants/real-time-event.constant";
 import {Channel} from "pusher-js";
+import {Pagination} from "../../../models/pagination";
+import {PaginationConstant} from "../../../constants/pagination.constant";
+import {LoadNotificationMessageViewModel} from "../../../view-models/notification-message/load-notification-message.view-model";
+import {INotificationMessageService} from "../../../interfaces/services/notification-message-service.interface";
+import {SearchResult} from "../../../models/search-result";
+import {NotificationMessage} from "../../../models/entities/notification-message";
+import {NotificationMessageStatus} from "../../../enums/notification-message-status.enum";
 
 /* @ngInject */
 export class AuthorizedLayoutController implements IController {
@@ -22,7 +29,7 @@ export class AuthorizedLayoutController implements IController {
     //#region Constructors
 
     public constructor(public profile: User,
-                       public $realTime: IRealTimeService,
+                       public $realTime: IRealTimeService, public $notificationMessage: INotificationMessageService,
                        public $state: StateService, public localStorageService: ILocalStorageService,
                        public $scope: IAuthorizedLayoutScope,
                        public $window: IWindowService, public $timeout: ITimeoutService,
@@ -30,6 +37,15 @@ export class AuthorizedLayoutController implements IController {
 
         // Properties binding
         $scope.profile = profile;
+
+        let loadNotificationMessagePagination = new Pagination();
+        loadNotificationMessagePagination.page = 1;
+        loadNotificationMessagePagination.records = PaginationConstant.maxNavBarNotificationMessages;
+
+        let loadNotificationMessagesCondition = new LoadNotificationMessageViewModel();
+        loadNotificationMessagesCondition.statuses = [NotificationMessageStatus.unseen];
+        loadNotificationMessagesCondition.pagination = loadNotificationMessagePagination;
+        $scope.loadNotificationMessagesCondition = loadNotificationMessagesCondition;
 
         // Methods binding
         $scope.ngOnLoginClicked = this._ngOnLoginClicked;
@@ -89,6 +105,13 @@ export class AuthorizedLayoutController implements IController {
             })
             .catch(() => {
                 console.log('Something wrong while establishing real-time connection.')
+            });
+
+        // Load user notification.
+        this.$notificationMessage
+            .loadNotificationMessages(this.$scope.loadNotificationMessagesCondition)
+            .then((loadNotificationMessageResult: SearchResult<NotificationMessage>) => {
+                this.$scope.loadUnreadNotificationMessagesResult = loadNotificationMessageResult;
             });
     };
 

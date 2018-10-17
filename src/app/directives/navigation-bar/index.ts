@@ -11,6 +11,7 @@ export class NavigationBarDirective implements IDirective {
 
     compile = (): any => {
         let pGetTemplatePromise = this.$q((resolve) => {
+            require('./navigation-bar.scss');
             require.ensure([], () => resolve(require('./navigation-bar.html')));
         });
 
@@ -30,7 +31,10 @@ export class NavigationBarDirective implements IDirective {
         ngClickLogin: '&?',
         ngClickRegister: '&?',
         ngClickProfile: '&?',
-        ngClickSignOut: '&?'
+        ngClickSignOut: '&?',
+        totalUnseenNotificationMessages: '<?',
+        unseenNotificationMessages: '<?'
+
     };
 
     // Directive controller

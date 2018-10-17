@@ -38,8 +38,8 @@ export class TopicsModule {
                 * Resolve category group information.
                 * */
                 routeResolver: ($state: StateService,
-                                              $stateParams: Map<string, object>,
-                                              $categoryGroup: ICategoryGroupService, $category: ICategoryService): IPromise<CategoryGroupDetailResolver> => {
+                                $stateParams: Map<string, object>,
+                                $categoryGroup: ICategoryGroupService, $category: ICategoryService): IPromise<CategoryGroupDetailResolver> => {
 
                     // Initialize resolver.
                     let categoryGroupDetailResolver = new CategoryGroupDetailResolver();
@@ -51,16 +51,31 @@ export class TopicsModule {
 
                     //#region Load category group
 
-                    let loadCategoryGroupsCondition = new LoadCategoryGroupViewModel();
-                    loadCategoryGroupsCondition.ids = [categoryId];
-                    loadCategoryGroupsCondition.pagination = new Pagination();
-                    loadCategoryGroupsCondition.pagination.page = 1;
-                    loadCategoryGroupsCondition.pagination.records = 1;
 
                     //#endregion
 
-                    return $categoryGroup
-                        .loadCategoryGroups(loadCategoryGroupsCondition)
+                    return $category
+                        .loadCategoryUsingId(categoryId)
+
+                        //#region Load category
+
+                        .then((category: Category) => {
+
+                            let loadCategoryGroupsCondition = new LoadCategoryGroupViewModel();
+                            loadCategoryGroupsCondition.ids = [category.categoryGroupId];
+                            loadCategoryGroupsCondition.pagination = new Pagination();
+                            loadCategoryGroupsCondition.pagination.page = 1;
+                            loadCategoryGroupsCondition.pagination.records = 1;
+
+                            // Update resolver.
+                            categoryGroupDetailResolver.category = category;
+
+                            return $categoryGroup
+                                .loadCategoryGroups(loadCategoryGroupsCondition)
+
+                        })
+
+                        //#endregion
 
                         //#region Load category group
 
@@ -73,20 +88,8 @@ export class TopicsModule {
                                 throw 'No category group is found';
 
                             categoryGroupDetailResolver.categoryGroup = categoryGroups[0];
-
-                            return $category
-                                .loadCategoryUsingId(categoryId)
-
-
-                        })
-
-                        //#endregion
-
-                        //#region Load category
-
-                        .then((category: Category) => {
-                            categoryGroupDetailResolver.category = category;
                             return categoryGroupDetailResolver;
+
                         })
 
                         //#endregion

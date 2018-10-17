@@ -1,8 +1,8 @@
 import {IScope} from "angular";
 import {User} from "../../models/entities/user";
-import {UrlStateConstant} from "../../constants/url-state.constant";
+import {NotificationMessage} from "../../models/entities/notification-message";
 
-export interface INavigationBarScope extends IScope{
+export interface INavigationBarScope extends IScope {
 
     //#region Properties
 
@@ -20,6 +20,10 @@ export interface INavigationBarScope extends IScope{
 
     // Raise event when register is clicked.
     readonly ngClickRegister: Function | null;
+
+    readonly unseenNotificationMessages: Array<NotificationMessage>;
+
+    readonly totalUnseenNotificationMessages: number | null;
 
     //#endregion
 

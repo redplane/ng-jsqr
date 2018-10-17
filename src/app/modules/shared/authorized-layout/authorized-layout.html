@@ -7,6 +7,8 @@
                         ng-click-register="ngOnRegisterClicked()"
                         ng-click-sign-out="ngOnSignOutClicked()"
                         ng-click-profile="ngOnProfileClicked()"
+                        unseen-notification-messages="loadUnreadNotificationMessagesResult.records"
+                        total-unseen-notification-messages="loadUnreadNotificationMessagesResult.total"
                         profile="profile">
         </navigation-bar>
 
@@ -16,7 +18,7 @@
                  data-speed="3">
                 <div class="container full-height">
                     <div class="title-panel">
-                        <h2 class="site-name">PixelGoose.com</h2>
+                        <h2 class="site-name">{{'TITLE_APP_TITLE' | translate}}</h2>
                         <p class="site-description">Premium styles for phpBB3</p>
                     </div>
                 </div>

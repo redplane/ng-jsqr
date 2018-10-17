@@ -12,6 +12,7 @@ export class NavigationBarController implements IController {
     * Initialize controller with injectors.
     * */
     public constructor(public $scope: INavigationBarScope, public $state: StateService) {
+
         $scope.ngOnLoginClicked = this._ngOnLoginClicked;
         $scope.ngOnRegisterClicked = this._ngClickRegister;
         $scope.ngOnSignOutClicked = this._ngClickSignOut;

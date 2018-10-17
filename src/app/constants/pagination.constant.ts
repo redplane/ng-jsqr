@@ -17,6 +17,8 @@ export class PaginationConstant {
 
     public static maxRecords: number = 30;
 
+    public static maxNavBarNotificationMessages: number = 15;
+
     //#endregion
 
 }
