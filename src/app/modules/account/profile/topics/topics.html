@@ -1,4 +1,5 @@
-<div ng-init="ngOnInit()" class="box-body">
+<div id="profileTopics" ng-init="ngOnInit()"
+     class="box-body">
     <table class="table table-condensed">
         <thead>
         <tr>
@@ -26,10 +27,10 @@
                 <a href>{{topic.status | toItemStatusTitle | translate}}</a>
             </td>
             <td>
-                {{topic.createdTime}}
+                {{topic.createdTime | amUtc | amDateFormat:'MM/DD/YYYY HH:mm'}}
             </td>
             <td>
-                {{topic.lastModifiedTime}}
+                {{topic.lastModifiedTime | amUtc | amDateFormat:'MM/DD/YYYY HH:mm'}}
             </td>
             <td>
                 <button class="btn btn-info"

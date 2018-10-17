@@ -33,6 +33,20 @@ export class ProfileModule {
                 return $q((resolve) => {
                     // lazy load the view
                     require.ensure([], () => {
+                        resolve(require('./master-layout/master-layout.html'));
+                    });
+                });
+            }],
+            controller: 'profileMasterLayoutController'
+        };
+
+        // Master layout view.
+        views[`${UrlStateConstant.profileModuleName}@${UrlStateConstant.profileModuleName}`] = {
+            templateProvider: ['$q', ($q) => {
+                // We have to inject $q service manually due to some reasons that ng-annotate cannot add $q service in production mode.
+                return $q((resolve) => {
+                    // lazy load the view
+                    require.ensure([], () => {
 
                         require('./profile.scss');
                         require('ui-cropper/compile/unminified/ui-cropper.css');
@@ -93,8 +107,24 @@ export class ProfileModule {
                 views: views,
                 resolve: {
 
-                    // Load master layout controller.
                     loadMasterLayoutController: ($q, $ocLazyLoad) => {
+                        return $q((resolve) => {
+                            require.ensure([], () => {
+
+                                // load only controller module
+                                let ngModule = module('profile.master-layout', []);
+
+                                const {ProfileMasterLayoutController} = require('./master-layout/master-layout.controller');
+                                ngModule.controller('profileMasterLayoutController', ProfileMasterLayoutController);
+
+                                $ocLazyLoad.load({name: ngModule.name});
+                                resolve(ngModule.controller);
+                            })
+                        });
+                    },
+
+                    // Load master layout controller.
+                    loadProfileController: ($q, $ocLazyLoad) => {
                         return $q((resolve) => {
                             require.ensure([], () => {
 

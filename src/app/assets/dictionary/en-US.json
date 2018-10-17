@@ -56,6 +56,7 @@
   "TITLE_APP_TITLE": "iConfess",
   "TITLE_SEE_MORE": "See more",
   "TITLE_TOPIC_COMMENT": "Topic comment",
+  "TITLE_NOTIFICATION": "Notification",
 
   "MSG_FIELD_REQUIRED": "This field is required",
   "MSG_REQUEST_RESET_PASSWORD_SUCCESSFULLY": "A reset password email has been sent to you. Please check your inbox.",

@@ -32,9 +32,6 @@ export interface IProfileScope extends IScope {
     // Profile upload form
     profileImageUploadForm: IFormController;
 
-    // What tab is active.
-    activeProfileTab: number;
-
     //#endregion
 
     //#region Methods
