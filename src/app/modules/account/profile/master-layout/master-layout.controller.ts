@@ -6,6 +6,7 @@ import {IUserService} from "../../../../interfaces/services/user-service.interfa
 import {StateService} from "@uirouter/core";
 import {IProfileMasterLayoutScope} from "./master-layout.scope";
 import {UrlStateConstant} from "../../../../constants/url-state.constant";
+import {ProfileMasterInfoResolver} from "../../../../models/resolvers/profile-master-info.resolver";
 
 /* @ngInject */
 export class ProfileMasterLayoutController implements IController {
@@ -20,9 +21,9 @@ export class ProfileMasterLayoutController implements IController {
     public constructor(public $ui: IUiService,
                        public $topic: ITopicService, public $category: ICategoryService, public $user: IUserService,
                        public $q: IQService, public $state: StateService,
-                       public $scope: IProfileMasterLayoutScope) {
+                       public $scope: IProfileMasterLayoutScope, public routeResolver: ProfileMasterInfoResolver) {
 
-        this.$scope.activeTab = UrlStateConstant.profileModuleName;
+        this.$scope.userId = routeResolver.user.id;
         this.$scope.urlStateConstant = UrlStateConstant;
 
         // Methods binding
@@ -38,15 +39,16 @@ export class ProfileMasterLayoutController implements IController {
     * Check whether tab is selected or not.
     * */
     private _ngIsTabActive = (tabName: string): boolean => {
-        let activeTab = this.$scope.activeTab;
-        return activeTab === tabName;
+        // let activeTab = this.$scope.activeTab;
+        // return activeTab === tabName;
+        return true;
     };
 
     /*
     * Select tab using its name.
     * */
     private _ngSelectTab = (tabName: string): void => {
-        this.$scope.activeTab = tabName;
+        // this.$scope.activeTab = tabName;
     };
 
 

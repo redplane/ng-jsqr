@@ -14,15 +14,33 @@ export class UrlStateConstant {
     // Dashboard module url.
     public static dashboardModuleUrl: string = '/dashboard';
 
+    //#region Profile module
+
     // Profile module name.
     public static profileModuleName: string = 'profile';
 
     // Profile module url.
-    public static profileModuleUrl: string = '/profile/:profileId';
+    public static profileModuleUrl: string = '/profile/{profileId:int}';
+
+    public static profileFollowTopicModuleUrl: string = '/profile/follow-topic/{profileId: int}';
+
+    public static profileFollowTopicModuleName: string = 'profile-follow-topic';
+
+    public static profileFollowCategoryModuleName: string = 'profile-follow-category';
+
+    public static profileFollowCategoryModuleUrl: string = '/follow-category/{profileId: int}';
+
+    public static profileMasterLayoutModuleName: string = 'profile-master-layout';
 
     public static profileTopicsModuleName: string = 'profile-topics';
 
+    public static profileTopicsModuleUrl: string = '/profile/topics/{profileId: int}';
+
     public static profileNotificationsModuleName: string = 'profile-notifications';
+
+    public static profileNotificationModuleUrl: string = '/profile/notifications/{profileId: int}';
+
+    //#endregion
 
     // Category topic module name.
     public static categoryDetailModuleName: string = 'category';

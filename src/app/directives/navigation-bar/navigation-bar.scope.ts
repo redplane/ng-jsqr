@@ -10,16 +10,18 @@ export interface INavigationBarScope extends IScope {
     readonly profile: User | null;
 
     // Raise event when login is clicked.
-    readonly ngClickLogin: Function | null;
+    readonly ngClickLogin: () => void | null;
 
     // Raise event when sign out is clicked.
-    readonly ngClickSignOut: Function | null;
+    readonly ngClickSignOut: () => void | null;
 
     // Raise event when profile is clicked.
-    readonly ngClickProfile: Function | null;
+    readonly ngClickProfile: () => void | null;
 
     // Raise event when register is clicked.
-    readonly ngClickRegister: Function | null;
+    readonly ngClickRegister: () => void | null;
+
+    readonly ngClickSeeMessages: () => void | null;
 
     readonly unseenNotificationMessages: Array<NotificationMessage>;
 
@@ -43,6 +45,9 @@ export interface INavigationBarScope extends IScope {
 
     // Called when brand is clicked.
     ngOnBrandClicked(): void;
+
+    // Called when see more button is clicked.
+    ngOnSeeMoreMessageClicked(): void;
 
     //#endregion
 }

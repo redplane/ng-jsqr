@@ -36,5 +36,8 @@ export interface IAuthorizedLayoutScope extends IScope {
     // Called when component is initialized.
     ngOnInit(): void;
 
+    // Called when see message is clicked
+    ngOnSeeMessagesClicked(): void;
+
     //#endregion
 }

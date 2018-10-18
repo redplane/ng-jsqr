@@ -16,6 +16,7 @@ import {INotificationMessageService} from "../../../interfaces/services/notifica
 import {SearchResult} from "../../../models/search-result";
 import {NotificationMessage} from "../../../models/entities/notification-message";
 import {NotificationMessageStatus} from "../../../enums/notification-message-status.enum";
+import {ProfileStateParam} from "../../../models/params/profile.state-param";
 
 /* @ngInject */
 export class AuthorizedLayoutController implements IController {
@@ -53,6 +54,7 @@ export class AuthorizedLayoutController implements IController {
         $scope.ngOnSignOutClicked = this._ngOnSignOutClicked;
         $scope.ngOnProfileClicked = this._ngOnProfileClicked;
         $scope.ngOnInit = this._ngOnInit;
+        $scope.ngOnSeeMessagesClicked = this._ngOnSeeMessagesClicked;
 
     }
 
@@ -84,7 +86,9 @@ export class AuthorizedLayoutController implements IController {
     // Called when profile is clicked.
     private _ngOnProfileClicked = (): void => {
         // Redirect user to profile page.
-        this.$state.go(UrlStateConstant.profileModuleName, {profileId: 0});
+        let params = new ProfileStateParam();
+        params.profileId = this.profile.id;
+        this.$state.go(UrlStateConstant.profileModuleName, params);
     };
 
     // Register real-time channels.
@@ -118,6 +122,13 @@ export class AuthorizedLayoutController implements IController {
     // Called when user public channel raises an event.
     private _ngOnPublicUserChannelRaiseEvent = (data: any): void => {
         console.log(data);
+    };
+
+    // Called when see message is clicked.
+    private _ngOnSeeMessagesClicked = (): void => {
+        let params = new ProfileStateParam();
+        params.profileId = this.$scope.profile.id;
+        this.$state.go(UrlStateConstant.profileNotificationsModuleName, params);
     };
 
     //#endregion

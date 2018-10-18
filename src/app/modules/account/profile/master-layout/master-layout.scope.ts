@@ -5,7 +5,7 @@ export interface IProfileMasterLayoutScope extends IScope {
 
     //#region Properties
 
-    activeTab: string;
+    userId: number;
 
     urlStateConstant: UrlStateConstant;
 

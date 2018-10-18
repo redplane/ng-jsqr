@@ -15,7 +15,7 @@ import {StateService} from "@uirouter/core";
 import {UrlStateConstant} from "../../../../constants/url-state.constant";
 
 /* @ngInject */
-export class PersonalTopicsController implements IController {
+export class ProfileTopicController implements IController {
 
     //#region Properties
 

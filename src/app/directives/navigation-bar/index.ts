@@ -32,6 +32,7 @@ export class NavigationBarDirective implements IDirective {
         ngClickRegister: '&?',
         ngClickProfile: '&?',
         ngClickSignOut: '&?',
+        ngClickSeeMessages: '&?',
         totalUnseenNotificationMessages: '<?',
         unseenNotificationMessages: '<?'
 

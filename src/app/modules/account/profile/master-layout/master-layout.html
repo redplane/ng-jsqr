@@ -4,24 +4,44 @@
             <div class="box box-default">
                 <div class="box-body">
                     <ul class="nav nav-pills nav-stacked">
-                        <li ng-class="{'active': ngIsTabActive(urlStateConstant.profileModuleName)}"
-                            ng-click="ngSelectTab(urlStateConstant.profileModuleName)">
+                        <!--<li ng-class="{'active': ngIsTabActive(urlStateConstant.profileModuleName)}"-->
+                            <!--ng-click="ngSelectTab(urlStateConstant.profileModuleName)">-->
+                            <!--<a href>{{'TITLE_PROFILE' | translate}}</a>-->
+                        <!--</li>-->
+                        <!--<li ng-class="{'active': ngIsTabActive(urlStateConstant.profileTopicsModuleName)}"-->
+                            <!--ng-click="ngSelectTab(urlStateConstant.profileTopicsModuleName)">-->
+                            <!--<a href>{{'TITLE_TOPIC' | translate}}</a>-->
+                        <!--</li>-->
+                        <!--<li ng-class="{'active': ngIsTabActive(urlStateConstant.followingCategoriesModuleName)}"-->
+                            <!--ng-click="ngSelectTab(urlStateConstant.followingCategoriesModuleName)">-->
+                            <!--<a href>{{'TITLE_FOLLOWING_CATEGORY' | translate}}</a>-->
+                        <!--</li>-->
+                        <!--<li ng-class="{'active': ngIsTabActive(urlStateConstant.followingTopicsModuleName)}"-->
+                            <!--ng-click="ngSelectTab(urlStateConstant.followingTopicsModuleName)">-->
+                            <!--<a href>{{'TITLE_FOLLOWING_TOPIC' | translate}}</a>-->
+                        <!--</li>-->
+                        <!--<li ng-class="{'active': ngIsTabActive(urlStateConstant.profileNotificationsModuleName)}"-->
+                            <!--ng-click="ngSelectTab(urlStateConstant.profileNotificationsModuleName)">-->
+                            <!--<a href>{{'TITLE_NOTIFICATION' | translate}}</a>-->
+                        <!--</li>-->
+                        <li ui-sref="{{urlStateConstant.profileModuleName}}({profileId: userId})"
+                            ui-sref-active="active">
                             <a href>{{'TITLE_PROFILE' | translate}}</a>
                         </li>
-                        <li ng-class="{'active': ngIsTabActive(urlStateConstant.profileTopicsModuleName)}"
-                            ng-click="ngSelectTab(urlStateConstant.profileTopicsModuleName)">
+                        <li ui-sref="{{urlStateConstant.profileTopicsModuleName}}({profileId: userId})"
+                            ui-sref-active="active">
                             <a href>{{'TITLE_TOPIC' | translate}}</a>
                         </li>
-                        <li ng-class="{'active': ngIsTabActive(urlStateConstant.followingCategoriesModuleName)}"
-                            ng-click="ngSelectTab(urlStateConstant.followingCategoriesModuleName)">
+                        <li ui-sref="{{urlStateConstant.profileFollowCategoryModuleName}}({profileId: userId})"
+                            ui-sref-active="active">
                             <a href>{{'TITLE_FOLLOWING_CATEGORY' | translate}}</a>
                         </li>
-                        <li ng-class="{'active': ngIsTabActive(urlStateConstant.followingTopicsModuleName)}"
-                            ng-click="ngSelectTab(urlStateConstant.followingTopicsModuleName)">
+                        <li ui-sref="{{urlStateConstant.profileFollowTopicModuleName}}({profileId: userId})"
+                            ui-sref-active="active">
                             <a href>{{'TITLE_FOLLOWING_TOPIC' | translate}}</a>
                         </li>
-                        <li ng-class="{'active': ngIsTabActive(urlStateConstant.profileNotificationsModuleName)}"
-                            ng-click="ngSelectTab(urlStateConstant.profileNotificationsModuleName)">
+                        <li ui-sref="{{urlStateConstant.profileNotificationsModuleName}}({profileId: userId})"
+                            ui-sref-active="active" >
                             <a href>{{'TITLE_NOTIFICATION' | translate}}</a>
                         </li>
                     </ul>
@@ -32,12 +52,13 @@
     <div class="col-md-8">
         <div class="box box-default">
             <div class="box-body">
-                <div ng-if="ngIsTabActive(urlStateConstant.profileModuleName)"
-                     ui-view="{{urlStateConstant.profileModuleName}}"></div>
-                <div ng-if="ngIsTabActive(urlStateConstant.profileTopicsModuleName)" ui-view="{{urlStateConstant.profileTopicsModuleName}}"></div>
-                <div ng-if="ngIsTabActive(urlStateConstant.followingTopicsModuleName)" ui-view="{{urlStateConstant.followingTopicsModuleName}}"></div>
-                <div ng-if="ngIsTabActive(urlStateConstant.followingCategoriesModuleName)" ui-view="{{urlStateConstant.followingCategoriesModuleName}}"></div>
-                <div ng-if="ngIsTabActive(urlStateConstant.profileNotificationsModuleName)" ui-view="{{urlStateConstant.profileNotificationsModuleName}}"></div>
+                <!--<div ng-if="ngIsTabActive(urlStateConstant.profileModuleName)"-->
+                     <!--ui-view="{{urlStateConstant.profileModuleName}}"></div>-->
+                <!--<div ng-if="ngIsTabActive(urlStateConstant.profileTopicsModuleName)" ui-view="{{urlStateConstant.profileTopicsModuleName}}"></div>-->
+                <!--<div ng-if="ngIsTabActive(urlStateConstant.followingTopicsModuleName)" ui-view="{{urlStateConstant.followingTopicsModuleName}}"></div>-->
+                <!--<div ng-if="ngIsTabActive(urlStateConstant.followingCategoriesModuleName)" ui-view="{{urlStateConstant.followingCategoriesModuleName}}"></div>-->
+                <!--<div ng-if="ngIsTabActive(urlStateConstant.profileNotificationsModuleName)" ui-view="{{urlStateConstant.profileNotificationsModuleName}}"></div>-->
+                <div ui-view></div>
             </div>
         </div>
     </div>

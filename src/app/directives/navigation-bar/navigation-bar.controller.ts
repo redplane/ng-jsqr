@@ -2,6 +2,7 @@ import {IController} from "angular";
 import {INavigationBarScope} from "./navigation-bar.scope";
 import {StateService} from "@uirouter/core";
 import {UrlStateConstant} from "../../constants/url-state.constant";
+import {ProfileStateParam} from "../../models/params/profile.state-param";
 
 /* @ngInject */
 export class NavigationBarController implements IController {
@@ -18,6 +19,7 @@ export class NavigationBarController implements IController {
         $scope.ngOnSignOutClicked = this._ngClickSignOut;
         $scope.ngOnProfileClicked = this._ngClickProfile;
         $scope.ngOnBrandClicked = this._ngOnBrandClicked;
+        $scope.ngOnSeeMoreMessageClicked = this._ngOnSeeMoreMessageClicked;
     }
 
     //#endregion
@@ -25,7 +27,7 @@ export class NavigationBarController implements IController {
     //#region Methods
 
     // Called when login is clicked.
-    private _ngOnLoginClicked = () => {
+    private _ngOnLoginClicked = (): void => {
         if (!this.$scope.ngClickLogin)
             return;
 
@@ -33,7 +35,7 @@ export class NavigationBarController implements IController {
     };
 
     // Called when register is clicked.
-    private _ngClickRegister = () => {
+    private _ngClickRegister = (): void => {
         if (!this.$scope.ngClickRegister)
             return;
 
@@ -41,7 +43,7 @@ export class NavigationBarController implements IController {
     };
 
     // Called when sign out is clicked.
-    private _ngClickSignOut = () => {
+    private _ngClickSignOut = (): void => {
         if (!this.$scope.ngClickSignOut)
             return;
 
@@ -49,7 +51,7 @@ export class NavigationBarController implements IController {
     };
 
     // Called when profile is clicked.
-    private _ngClickProfile = () => {
+    private _ngClickProfile = (): void => {
         if (!this.$scope.ngClickProfile)
             return;
 
@@ -57,9 +59,18 @@ export class NavigationBarController implements IController {
     };
 
     // Called when profile is clicked.
-    private _ngOnBrandClicked = () => {
+    private _ngOnBrandClicked = (): void => {
         // Redirect user to home page.
         this.$state.go(UrlStateConstant.dashboardModuleName);
+    };
+
+    // Called when see more message is clicked.
+    private _ngOnSeeMoreMessageClicked = (): void => {
+
+        if (!this.$scope.ngClickSeeMessages)
+            return;
+
+        this.$scope.ngClickSeeMessages();
     };
 
     //#endregion
