@@ -48,12 +48,6 @@ export interface IMainScope extends IScope {
     * */
     ngOnCategoryClicked(categoryId: number): void;
 
-    ngGetCategoryTotalPost(categoryId: number): number;
-
-    ngGetCategoryLastTopicTitle(categoryId: number): string;
-
-    ngGetCategoryLastTopicCreatedTime(categoryId: number): number;
-
     ngOnTopicClicked(categoryId: number): number;
 
     //#endregion

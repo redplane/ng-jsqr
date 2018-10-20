@@ -43,18 +43,18 @@
                             </div>
                             <div class="col-md-1 col-sm-2 col-xs-12 topic-posts">
                                 <div class="form-group">
-                                    <b class="fa fa-folder-open-o"></b> <span>&raquo;</span> {{ngGetCategoryTotalPost(category.id)}}
+                                    <b class="fa fa-folder-open-o"></b> <span>&raquo;</span> {{mIdToCategorySummaryMap[category.id].totalPost ? mIdToCategorySummaryMap[category.id].totalPost : 0}}
                                 </div>
                             </div>
                             <div class="col-md-3 col-sm-2 col-xs-12 topic-user-description">
-                                <div ng-if="ngGetCategoryTotalPost(category.id)">
+                                <div ng-if="mIdToCategorySummaryMap[category.id].totalPost">
                                     <div class="text-ellipsis">
                                         <b class="fa fa-edit"></b>&nbsp;
-                                        <i>{{'TITLE_LAST_TOPIC' | translate}} </i> <a href >{{ngGetCategoryLastTopicTitle(category.id)}}</a>
+                                        <i>{{'TITLE_LAST_TOPIC' | translate}} </i> <a href >{{mIdToCategorySummaryMap[category.id].lastTopicTitle}}</a>
                                     </div>
                                     <div class="text-ellipsis">
                                         <b class="fa fa-clock-o"></b>&nbsp;
-                                        <i>{{'TITLE_CREATED_AT' | translate}}</i> {{ngGetCategoryLastTopicCreatedTime(category.id) | amUtc | amLocal | amDateFormat:'MM/DD/YYYY HH:mm'}}
+                                        <i>{{'TITLE_CREATED_AT' | translate}}</i> {{mIdToCategorySummaryMap[category.id].lastTopicCreatedTime | amUtc | amLocal | amDateFormat:'MM/DD/YYYY HH:mm'}}
                                     </div>
                                 </div>
                             </div>

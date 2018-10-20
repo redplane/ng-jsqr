@@ -46,9 +46,6 @@ export class MainController implements IController {
         // Methods mapping.
         $scope.ngOnInit = this._ngOnInit;
         $scope.ngOnCategoryClicked = this._ngOnCategoryClicked;
-        $scope.ngGetCategoryTotalPost = this._ngGetCategoryTotalPost;
-        $scope.ngGetCategoryLastTopicTitle = this._ngGetCategoryLastTopicTitle;
-        $scope.ngGetCategoryLastTopicCreatedTime = this._ngGetCategoryLastTopicCreatedTime;
 
     }
 
@@ -106,6 +103,8 @@ export class MainController implements IController {
                 // Get category summaries.
                 let loadCategorySummariesCondition = new LoadCategorySummaryViewModel();
                 loadCategorySummariesCondition.categoryIds = categories.map(x => x.id);
+                loadCategorySummariesCondition.pagination = null;
+
                 return this.$category
                     .loadCategorySummaries(loadCategorySummariesCondition)
                     .then((loadCategorySummariesResult: SearchResult<CategorySummary>) => {
@@ -130,29 +129,6 @@ export class MainController implements IController {
         this.$state.go(UrlStateConstant.categoryDetailModuleName, {categoryId: categoryId});
     };
 
-    private _ngGetCategoryTotalPost = (categoryId: number): number => {
-        let mIdToCategorySummaryMap= this.$scope.mIdToCategorySummaryMap;
-        if (!mIdToCategorySummaryMap || !mIdToCategorySummaryMap[categoryId])
-            return 0;
-
-        return mIdToCategorySummaryMap[categoryId].totalPost;
-    };
-
-    private _ngGetCategoryLastTopicTitle = (categoryId: number): string => {
-        let mIdToCategorySummaryMap= this.$scope.mIdToCategorySummaryMap;
-        if (!mIdToCategorySummaryMap || !mIdToCategorySummaryMap[categoryId])
-            return '';
-
-        return mIdToCategorySummaryMap[categoryId].lastTopicTitle;
-    };
-
-    private _ngGetCategoryLastTopicCreatedTime = (categoryId: number): number => {
-        let mIdToCategorySummaryMap= this.$scope.mIdToCategorySummaryMap;
-        if (!mIdToCategorySummaryMap || !mIdToCategorySummaryMap[categoryId])
-            return null;
-
-        return mIdToCategorySummaryMap[categoryId].lastTopicCreatedTime;
-    }
     //#endregion
 
     //#endregion
