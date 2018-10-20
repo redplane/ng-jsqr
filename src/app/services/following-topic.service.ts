@@ -4,6 +4,7 @@ import {LoadFollowingTopicViewModel} from "../view-models/following-topic/load-f
 import {SearchResult} from "../models/search-result";
 import {IHttpResponse, IHttpService, IPromise} from "angular";
 import {AppSetting} from "../models/app-setting";
+import {FollowingCategory} from "../models/entities/following-category";
 
 /* @ngInject */
 export class FollowingTopicService implements IFollowingTopicService {
@@ -33,8 +34,10 @@ export class FollowingTopicService implements IFollowingTopicService {
                     throw 'No following topic is found';
 
                 return loadFollowingTopicResult;
-            })
+            });
     }
+
+
 
     //#endregion
 }

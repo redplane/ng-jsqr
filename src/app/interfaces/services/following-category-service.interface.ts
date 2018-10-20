@@ -7,6 +7,12 @@ export interface IFollowingCategoryService {
 
     //#region Methods
 
+    // Start following category.
+    followCategory(categoryId: number): IPromise<FollowingCategory>;
+
+    // Stop following category.
+    stopFollowingCategory(categoryId: number): IPromise<void>;
+
     // Load following categories.
     loadFollowingCategories(condition: LoadFollowingCategoryViewModel): IPromise<SearchResult<FollowingCategory>>
 

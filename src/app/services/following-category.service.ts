@@ -28,7 +28,31 @@ export class FollowingCategoryService implements IFollowingCategoryService {
 
                 return loadFollowingCategoriesResponse.data;
             });
+    };
+
+    // Stop following category.
+    public stopFollowingCategory(categoryId: number): IPromise<void> {
+        let url: string = `${this.appSettingConstant.apiEndPoint}/api/follow-category/${categoryId}`;
+        return this.$http
+            .delete(url)
+            .then(() => {
+                return void(0);
+            });
+    };
+
+    // Start following category.
+    public followCategory(categoryId: number): IPromise<FollowingCategory> {
+        let url = `${this.appSettingConstant.apiEndPoint}/api/follow-topic/${categoryId}`;
+        return this.$http
+            .post(url, {})
+            .then((followCategoryResponse: IHttpResponse<FollowingCategory>) => {
+                if (!followCategoryResponse)
+                    throw 'Cannot follow the category.';
+
+                return followCategoryResponse.data;
+            });
     }
+
 
     //#endregion
 

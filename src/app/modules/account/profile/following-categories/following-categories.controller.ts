@@ -12,6 +12,11 @@ import {User} from "../../../../models/entities/user";
 import {Category} from "../../../../models/entities/category";
 import {Pagination} from "../../../../models/pagination";
 import {PaginationConstant} from "../../../../constants/pagination.constant";
+import {StateService} from "@uirouter/core";
+import {UrlStateConstant} from "../../../../constants/url-state.constant";
+import {CategoryDetailStateParam} from "../../../../models/params/category-detail.state-param";
+import {IToastrService} from "angular-toastr";
+import {ItemStatus} from "../../../../enums/item-status.enum";
 
 /* @ngInject */
 export class FollowingCategoriesController implements IController {
@@ -27,6 +32,7 @@ export class FollowingCategoriesController implements IController {
 
     // Initialize controller with injector.
     public constructor(public $scope: IFollowingCategoriesScope,
+                       public $state: StateService, public toastr: IToastrService, public $translate: angular.translate.ITranslateService,
                        public $ui: IUiService,
                        public $followingCategory: IFollowingCategoryService,
                        public $category: ICategoryService,
@@ -37,6 +43,7 @@ export class FollowingCategoriesController implements IController {
         pagination.page = 1;
         pagination.records = PaginationConstant.followingCategories;
         loadFollowingCategoryCondition.followerIds = [profile.id];
+        loadFollowingCategoryCondition.statuses = [ItemStatus.available];
         loadFollowingCategoryCondition.pagination = pagination;
         $scope.loadFollowingCategoriesCondition = loadFollowingCategoryCondition;
 
@@ -44,6 +51,8 @@ export class FollowingCategoriesController implements IController {
         $scope.ngOnInit = this._ngOnInit;
         $scope.ngOnPageChanged = this._ngOnPageChanged;
         $scope.ngGetCategory = this._ngGetCategory;
+        $scope.ngOnCategoryClicked = this._ngOnCategoryClicked;
+        $scope.ngOnStopFollowingCategoryClicked = this._ngOnStopFollowingCategoryClicked;
     }
 
     //#endregion
@@ -101,6 +110,46 @@ export class FollowingCategoriesController implements IController {
             return null;
 
         return category;
+    };
+
+    // Called when category is clicked.
+    private _ngOnCategoryClicked = (id: number): void => {
+
+        // Block UI.
+        this.$ui.blockAppUI();
+        const params = new CategoryDetailStateParam();
+        params.categoryId = id;
+        this.$state
+            .go(UrlStateConstant.categoryDetailModuleName, params)
+            .then(() => {
+                this.$ui.unblockAppUI();
+            })
+            .catch(() => {
+                this.$ui.unblockAppUI();
+            });
+    };
+
+    // Called when stop following category is clicked.
+    private _ngOnStopFollowingCategoryClicked = (id: number): void => {
+
+        // Block ui.
+        this.$ui.blockAppUI();
+
+        // Get category information.
+        let category = this._ngGetCategory(id);
+
+        this.$followingCategory
+            .stopFollowingCategory(id)
+            .then(() => {
+                let message = this.$translate.instant('MSG_UNFOLLOWED_CATEGORY_SUCCESSFULLY', category);
+                this.toastr.success(message);
+
+                // Reload the page.
+                this.$state.reload();
+            })
+            .finally(() => {
+                this.$ui.unblockAppUI();
+            });
     };
 
     //#endregion

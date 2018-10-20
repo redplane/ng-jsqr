@@ -27,6 +27,12 @@ export interface IFollowingCategoriesScope extends IScope{
     // Get category from id.
     ngGetCategory(id: number): Category;
 
+    // Called when category is clicked.
+    ngOnCategoryClicked: (id: number) => void;
+
+    // Called when stop following category is clicked.
+    ngOnStopFollowingCategoryClicked: (id: number) => void;
+
     //#endregion
 
 }

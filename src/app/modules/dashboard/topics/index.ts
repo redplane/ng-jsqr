@@ -10,6 +10,7 @@ import {CategoryGroupDetailResolver} from "../../../models/resolvers/category-gr
 import {LoadCategoryViewModel} from "../../../view-models/load-category.view-model";
 import {ICategoryService} from "../../../interfaces/services/category-service.interface";
 import {Category} from "../../../models/entities/category";
+import {CategoryDetailStateParam} from "../../../models/params/category-detail.state-param";
 
 /* @ngInject */
 export class TopicsModule {
@@ -38,14 +39,14 @@ export class TopicsModule {
                 * Resolve category group information.
                 * */
                 routeResolver: ($state: StateService,
-                                $stateParams: Map<string, object>,
+                                $stateParams: CategoryDetailStateParam,
                                 $categoryGroup: ICategoryGroupService, $category: ICategoryService): IPromise<CategoryGroupDetailResolver> => {
 
                     // Initialize resolver.
                     let categoryGroupDetailResolver = new CategoryGroupDetailResolver();
 
                     // Get category group information.
-                    let categoryId: number = parseInt($stateParams['categoryId']);
+                    let categoryId = $stateParams.categoryId;
                     if (!categoryId)
                         throw 'No topic has been specified';
 

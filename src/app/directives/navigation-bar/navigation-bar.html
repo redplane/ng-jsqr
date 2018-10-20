@@ -12,26 +12,19 @@
         </div>
         <div class="collapse navbar-collapse" id="main-navbar">
             <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown messages-menu">
+                <li class="dropdown notifications-menu">
                     <a href class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
                         <span class="label label-success"
                               ng-if="totalUnseenNotificationMessages">{{totalUnseenNotificationMessages}}</span>
                     </a>
                     <ul class="dropdown-menu">
-                       <li>
+                        <li>
                             <!-- inner menu: contains the actual data -->
                             <ul class="menu" slim-scroll>
                                 <li ng-repeat="unseenNotificationMessage in unseenNotificationMessages">
                                     <a href="#">
-                                        <div class="pull-left">
-                                            <img src="https://via.placeholder.com/512x512" class="img-circle" alt="User Image">
-                                        </div>
-                                        <h4>
-                                            {{'TITLE_TOPIC_COMMENT' | translate}}
-                                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                                        </h4>
-                                        <p>Why not buy a new awesome theme?</p>
+                                        {{unseenNotificationMessage.message}}
                                     </a>
                                 </li>
                             </ul>

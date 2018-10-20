@@ -46,7 +46,7 @@ export class UrlStateConstant {
     public static categoryDetailModuleName: string = 'category';
 
     // Category topic module url.
-    public static categoryDetailModuleUrl: string = '/category/:categoryId';
+    public static categoryDetailModuleUrl: string = '/category/{categoryId:int}';
 
     // Topic module.
     public static topicModuleUrl: string = '/topic/:topicId';

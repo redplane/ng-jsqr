@@ -68,5 +68,6 @@
   "MSG_PROFILE_IMAGE_UPLOADED_SUCCESSFULLY": "Profile image has been uploaded successfully.",
   "MSG_PASSWORD_CHANGED_SUCCESSFULLY": "Password has been changed successfully.",
   "MSG_ERROR_HAPPENED_WHILE_SIGN_IN_GOOGLE": "Something wrong with Google sign-in",
-  "MSG_ERROR_HAPPENED_WHILE_SIGN_IN_FACEBOOK": "Something wrong with Facebook sign-in"
+  "MSG_ERROR_HAPPENED_WHILE_SIGN_IN_FACEBOOK": "Something wrong with Facebook sign-in",
+  "MSG_UNFOLLOWED_CATEGORY_SUCCESSFULLY": "You have stopped following {{name}}."
 }

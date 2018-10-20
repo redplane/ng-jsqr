@@ -20,10 +20,13 @@
             </td>
             <td>
                 <button class="btn btn-info"
-                        ng-click="ngOnTopicClicked(topic.id)">
+                        ng-click="ngOnCategoryClicked(followingCategory.categoryId)">
                     <span class="fa fa-eye"></span>
                 </button>
-
+                <button class="btn btn-danger"
+                        ng-click="ngOnStopFollowingCategoryClicked(followingCategory.categoryId)">
+                    <span class="fa fa-trash"></span>
+                </button>
             </td>
         </tr>
         </tbody>
