@@ -55,6 +55,7 @@
 <div class="box-footer text-center">
     <ul uib-pagination
         total-items="loadedPersonalTopics.total"
+        items-per-page="loadPersonalTopicsCondition.pagination.records"
         ng-model="loadPersonalTopicsCondition.pagination.page"
         ng-change="ngOnTopicsPageChanged()"></ul>
 </div>

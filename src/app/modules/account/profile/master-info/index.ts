@@ -43,8 +43,12 @@ export class ProfileMasterInfoModule {
                                 const {ProfileMasterInfoController} = require('./master-info.controller.ts');
                                 ngModule.controller('profileMasterInfoController', ProfileMasterInfoController);
 
-                                const {ChangePasswordController} = require('./change-password/change-password.controller.ts');
+                                const {ChangePasswordController} = require('./change-password/change-password.controller');
                                 ngModule.controller('changePasswordController', ChangePasswordController);
+
+                                const {UserSignatureController} = require('./user-signature/user-signature.controller');
+                                ngModule.controller('userSignatureController', UserSignatureController);
+
                                 $ocLazyLoad.load({name: ngModule.name});
                                 resolve(ngModule.controller);
                             })

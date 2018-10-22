@@ -1,4 +1,4 @@
-import {IController, IPromise, IQService} from "angular";
+import {IController, IPromise} from "angular";
 import {IFollowingTopicsScope} from "./following-topics.scope";
 import {IFollowingTopicService} from "../../../../interfaces/services/following-topic-service.interface";
 import {LoadFollowingTopicViewModel} from "../../../../view-models/following-topic/load-following-topic.view-model";
@@ -13,6 +13,7 @@ import {ITopicService} from "../../../../interfaces/services/topic-service.inter
 import {cloneDeep} from 'lodash';
 import {StateService} from "@uirouter/core";
 import {UrlStateConstant} from "../../../../constants/url-state.constant";
+import {IToastrService} from "angular-toastr";
 
 /* @ngInject */
 export class PersonalFollowingTopicsController implements IController {
@@ -28,6 +29,7 @@ export class PersonalFollowingTopicsController implements IController {
     // Initialize controller with injectors.
     public constructor(public $scope: IFollowingTopicsScope,
                        public $state: StateService,
+                       public $translate: angular.translate.ITranslateService, public toastr: IToastrService,
                        public $ui: IUiService,
                        public $followingTopic: IFollowingTopicService, public $topic: ITopicService) {
 
@@ -44,6 +46,7 @@ export class PersonalFollowingTopicsController implements IController {
         $scope.ngOnPageChanged = this._ngOnPageChanged;
         $scope.ngOnTopicClicked = this._ngOnTopicClicked;
         $scope.ngGetTopic = this._ngGetTopic;
+        $scope.ngOnStopFollowingTopicClicked = this._ngOnStopFollowingTopicClicked;
     }
 
     //#endregion
@@ -83,8 +86,41 @@ export class PersonalFollowingTopicsController implements IController {
 
     // Called when topic is clicked.
     private _ngOnTopicClicked = (topicId: number): void => {
+        // Block app UI.
+        this.$ui.blockAppUI();
+
         this.$state
-            .go(UrlStateConstant.topicModuleName, {topicId: topicId});
+            .go(UrlStateConstant.topicModuleName, {topicId: topicId})
+            .then(() => {
+                this.$ui.unblockAppUI();
+            })
+            .catch(() => {
+                this.$ui.unblockAppUI();
+            });
+    };
+
+    // Called when stop following topic is clicked.
+    private _ngOnStopFollowingTopicClicked = (topicId: number): void => {
+
+        // Block app ui.
+        this.$ui.blockAppUI();
+
+        // Get topic information.
+        let topic = this._ngGetTopic(topicId);
+
+        this.$followingTopic
+            .deleteFollowingTopic(topicId)
+            .then(() => {
+                let message = this.$translate.instant('MSG_UNFOLLOWED_TOPIC_SUCCESSFULLY', topic);
+                this.toastr.success(message);
+
+                // Reload the state.
+                return this.$state
+                    .reload();
+            })
+            .finally(() => {
+                this.$ui.unblockAppUI();
+            })
     };
 
     // Load following topics.
@@ -97,7 +133,7 @@ export class PersonalFollowingTopicsController implements IController {
         let loadFollowingTopicResult = new SearchResult<FollowingTopic>();
 
         return this.$followingTopic
-            .loadFollowingCategories(condition)
+            .loadFollowingTopics(condition)
             .then((loadFollowingTopic: SearchResult<FollowingTopic>) => {
                 loadFollowingTopicResult = loadFollowingTopic;
                 let followingTopics = loadFollowingTopicResult.records;

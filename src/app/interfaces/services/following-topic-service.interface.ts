@@ -7,8 +7,14 @@ export interface IFollowingTopicService {
 
     //#region Methods
 
+    // Stop following topic.
+    deleteFollowingTopic(topicId: number): IPromise<void>;
+
+    // Start following topic.
+    followTopic(topicId: number): IPromise<FollowingTopic>;
+
     // Load following categories.
-    loadFollowingCategories(loadFollowingTopicCondition: LoadFollowingTopicViewModel): IPromise<SearchResult<FollowingTopic>>
+    loadFollowingTopics(loadFollowingTopicCondition: LoadFollowingTopicViewModel): IPromise<SearchResult<FollowingTopic>>
 
     //#endregion
 }

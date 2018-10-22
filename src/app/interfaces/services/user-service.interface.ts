@@ -9,6 +9,7 @@ import {BasicRegisterViewModel} from "../../view-models/users/basic-register.vie
 import {UserStatus} from "../../enums/user-status.enum";
 import {ChangePasswordViewModel} from "../../view-models/users/change-password.view-model";
 import {UploadProfileImageViewModel} from "../../view-models/users/upload-profile-image.view-model";
+import {AddUserSignatureViewModel} from "../../view-models/users/add-user-signature.view-model";
 
 export interface IUserService {
 
@@ -55,6 +56,9 @@ export interface IUserService {
 
     // Exchange facebook access token with system access token.
     loginFacebook(fbAccessToken: string): IPromise<TokenViewModel>;
+
+    // Add or replace user signature.
+    addUserSignature(model: AddUserSignatureViewModel): IPromise<User>;
 
     //#endregion
 

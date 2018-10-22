@@ -14,6 +14,9 @@ import {UploadProfileImageViewModel} from "../../../../view-models/users/upload-
 import {UserRole} from "../../../../enums/user-role.enum";
 import {IProfileGeneralInfoScope} from "./master-info.scope";
 import {ProfileMasterInfoResolver} from "../../../../models/resolvers/profile-master-info.resolver";
+import {AddUserSignatureViewModel} from "../../../../view-models/users/add-user-signature.view-model";
+import {TabNameConstant} from "../../../../constants/tab-name.constant";
+import {AddUserSignatureModalResolver} from "../../../../models/resolvers/add-user-signature-modal.resolver";
 
 /* @ngInject */
 export class ProfileMasterInfoController implements IController {
@@ -22,6 +25,9 @@ export class ProfileMasterInfoController implements IController {
 
     // Upload profile image modal.
     private _uploadProfileImageModal: IModalInstanceService = null;
+
+    // Add | edit profile signature modal.
+    private _addEditUserSignatureModal: IModalInstanceService = null;
 
     // Change password modal.
     private _changePasswordModal: IModalInstanceService = null;
@@ -60,10 +66,12 @@ export class ProfileMasterInfoController implements IController {
         $scope.ngOnProfileModalCancelClicked = this._ngOnProfileModalCancelClicked;
         $scope.ngOnProfileImageCropped = this._ngOnProfileImageCropped;
         $scope.ngIsAbleToResetCroppedImage = this._ngIsAbleToResetCroppedImage;
+        $scope.ngIsAbleToChangePassword = this._ngIsAbleToChangePassword;
         $scope.ngOnResetOriginalImageClicked = this._ngOnResetOriginalImageClicked;
         $scope.ngOnChangePasswordClicked = this._ngOnChangePasswordClicked;
         $scope.ngIsAbleToChangeProfileImage = this._ngIsAbleToChangeProfileImage;
         $scope.ngIsAbleToSeeFollowingTopics = this._ngIsAbleToSeeFollowingTopics;
+        $scope.ngOnAddEditUserSignatureClicked = this._ngOnAddEditUserSignatureClicked;
     }
 
     //#endregion
@@ -228,6 +236,41 @@ export class ProfileMasterInfoController implements IController {
             return true;
 
         return false;
-    }
+    };
+
+    // Called when add | replace user signature button is clicked.
+    private _ngOnAddEditUserSignatureClicked = (): void => {
+        let model = new AddUserSignatureViewModel();
+        model.signature = this.$scope.user.signature;
+
+        let addUserSignatureModalResolve = new AddUserSignatureModalResolver();
+        addUserSignatureModalResolve.user = this.$scope.user;
+
+        let modalOptions: IModalSettings = {};
+        modalOptions.size = 'md';
+        modalOptions.templateUrl = 'add-edit-user-signature.html';
+        modalOptions.controller = 'userSignatureController';
+        modalOptions.resolve = {
+            modalResolver: (): AddUserSignatureModalResolver => {
+                return addUserSignatureModalResolve;
+            }
+        };
+
+        if (this._addEditUserSignatureModal)
+            this._addEditUserSignatureModal.dismiss();
+
+        this._addEditUserSignatureModal = this.$uibModal
+            .open(modalOptions);
+
+        this._addEditUserSignatureModal
+            .result
+            .then((signature: string) => {
+                this.$scope.user.signature = signature;
+            })
+            .catch(() => {
+
+            });
+    };
+
     //#endregion
 }

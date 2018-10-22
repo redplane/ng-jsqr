@@ -30,5 +30,8 @@ export interface IFollowingTopicsScope extends IScope {
     // Get topic information.
     ngGetTopic(id: number): Topic;
 
+    // Called when stop following topic is clicked.
+    ngOnStopFollowingTopicClicked: (id: number) => void;
+
     //#endregion
 }

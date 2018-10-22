@@ -145,7 +145,7 @@ export class FollowingCategoriesController implements IController {
                 this.toastr.success(message);
 
                 // Reload the page.
-                this.$state.reload();
+                return this.$state.reload();
             })
             .finally(() => {
                 this.$ui.unblockAppUI();

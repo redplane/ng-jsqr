@@ -58,6 +58,9 @@
   "TITLE_TOPIC_COMMENT": "Topic comment",
   "TITLE_NOTIFICATION": "Notification",
   "TITLE_NOTIFICATION_MESSAGE": "Notification message",
+  "TITLE_SIGNATURE": "Signature",
+  "TITLE_EDIT_SIGNATURE": "Edit signature",
+  "TITLE_USER_SIGNATURE": "User signature",
 
   "MSG_FIELD_REQUIRED": "This field is required",
   "MSG_REQUEST_RESET_PASSWORD_SUCCESSFULLY": "A reset password email has been sent to you. Please check your inbox.",
@@ -69,5 +72,6 @@
   "MSG_PASSWORD_CHANGED_SUCCESSFULLY": "Password has been changed successfully.",
   "MSG_ERROR_HAPPENED_WHILE_SIGN_IN_GOOGLE": "Something wrong with Google sign-in",
   "MSG_ERROR_HAPPENED_WHILE_SIGN_IN_FACEBOOK": "Something wrong with Facebook sign-in",
-  "MSG_UNFOLLOWED_CATEGORY_SUCCESSFULLY": "You have stopped following {{name}}."
+  "MSG_UNFOLLOWED_CATEGORY_SUCCESSFULLY": "You have stopped following category {{name}}.",
+  "MSG_UNFOLLOWED_TOPIC_SUCCESSFULLY": "You have stopped following topic {{name}}."
 }

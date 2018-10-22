@@ -4,7 +4,6 @@ import {LoadFollowingTopicViewModel} from "../view-models/following-topic/load-f
 import {SearchResult} from "../models/search-result";
 import {IHttpResponse, IHttpService, IPromise} from "angular";
 import {AppSetting} from "../models/app-setting";
-import {FollowingCategory} from "../models/entities/following-category";
 
 /* @ngInject */
 export class FollowingTopicService implements IFollowingTopicService {
@@ -21,7 +20,7 @@ export class FollowingTopicService implements IFollowingTopicService {
     //#region Methods
 
     // Load following categories using specific conditions.
-    public loadFollowingCategories(loadFollowingTopicCondition: LoadFollowingTopicViewModel): IPromise<SearchResult<FollowingTopic>> {
+    public loadFollowingTopics(loadFollowingTopicCondition: LoadFollowingTopicViewModel): IPromise<SearchResult<FollowingTopic>> {
         let url = `${this.appSettingConstant.apiEndPoint}/api/follow-topic/search`;
         return this.$http
             .post(url, loadFollowingTopicCondition)
@@ -36,6 +35,30 @@ export class FollowingTopicService implements IFollowingTopicService {
                 return loadFollowingTopicResult;
             });
     }
+
+    // Delete following topic.
+    public deleteFollowingTopic(topicId: number): IPromise<void> {
+        let url = `${this.appSettingConstant.apiEndPoint}/api/follow-topic/${topicId}`;
+        return this.$http
+            .delete(url, {})
+            .then(() => {
+                return void(0);
+            });
+    };
+
+    // Follow topic.
+    public followTopic(topicId: number): IPromise<FollowingTopic> {
+        let url = `${this.appSettingConstant.apiEndPoint}/api/follow-topic/${topicId}`;
+        return this.$http
+            .post(url, {})
+            .then((followTopicResponse: IHttpResponse<FollowingTopic>) => {
+                if (!followTopicResponse)
+                    throw 'Cannot follow the topic';
+
+                return followTopicResponse.data;
+            });
+    }
+
 
 
 

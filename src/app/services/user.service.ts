@@ -7,11 +7,11 @@ import {LoginViewModel} from "../view-models/users/login.view-model";
 import {TokenViewModel} from "../view-models/users/token.view-model";
 import {IUserService} from "../interfaces/services/user-service.interface";
 import {ForgotPasswordViewModel} from "../view-models/users/forgot-password.view-model";
-import {BasicRegisterViewModel} from "../view-models/users/basic-register.view-model";
-import {UserRole} from "../enums/user-role.enum";
+import {BasicRegisterViewModel} from "../view-models/users/basic-register.view-model"
 import {UserStatus} from "../enums/user-status.enum";
 import {ChangePasswordViewModel} from "../view-models/users/change-password.view-model";
 import {UploadProfileImageViewModel} from "../view-models/users/upload-profile-image.view-model";
+import {AddUserSignatureViewModel} from "../view-models/users/add-user-signature.view-model";
 
 /* @ngInject */
 export class UserService implements IUserService {
@@ -189,7 +189,7 @@ export class UserService implements IUserService {
 
                 return token;
             })
-    }
+    };S
 
     // Exchange facebook access token with system access token.
     public loginFacebook(fbAccessToken: string): IPromise<TokenViewModel> {
@@ -212,7 +212,20 @@ export class UserService implements IUserService {
 
                 return token;
             });
-    }
+    };
+
+    // Add | replace user signature.
+    public addUserSignature(model: AddUserSignatureViewModel): IPromise<User> {
+        let url = `${this.appSettingConstant.apiEndPoint}/api/user/signature`;
+        return this.$http
+            .post(url, model)
+            .then((addUserSignatureResponse: IHttpResponse<User>) => {
+                if (!addUserSignatureResponse)
+                    throw 'Cannot update user signature.';
+
+                return addUserSignatureResponse.data;
+            })
+    };
 
     //#endregion
 

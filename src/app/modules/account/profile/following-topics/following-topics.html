@@ -23,7 +23,10 @@
                         ng-click="ngOnTopicClicked(topic.id)">
                     <span class="fa fa-eye"></span>
                 </button>
-
+                <button class="btn btn-danger"
+                        ng-click="ngOnStopFollowingTopicClicked(topic.id)">
+                    <span class="fa fa-trash"></span>
+                </button>
             </td>
         </tr>
         </tbody>

@@ -27,7 +27,7 @@ export interface IProfileGeneralInfoScope extends IScope {
     encodedProfileImage: string | null;
 
     // Result of profile image in blob.
-    blobProfileImage: any;
+    blobProfileImage: Blob | null;
 
     // Profile upload form
     profileImageUploadForm: IFormController;
@@ -65,6 +65,9 @@ export interface IProfileGeneralInfoScope extends IScope {
 
     // Check whether user is able to see following topics.
     ngIsAbleToSeeFollowingTopics(): boolean;
+
+    // Called when add edit user signature clicked.
+    ngOnAddEditUserSignatureClicked: () => void;
 
     //#endregion
 
