@@ -42,6 +42,9 @@ export interface ITopicsScope extends IScope{
     * */
     category: Category;
 
+    // Check whether category is being followed by the viewer or not.
+    bIsCategoryFollowed: boolean;
+
     //#endregion
 
     //#region Methods
@@ -80,6 +83,19 @@ export interface ITopicsScope extends IScope{
     ngGetTopicRepliesSummary: (topicId: number) => number;
 
     ngGetTopicFollowersSummary: (topicId: number) => number;
+
+    // Whether action panel is available to user or not.
+    ngIsActionPanelAvailable: () => boolean;
+
+    // Whether unfollow category is available or not.
+    ngIsUnfollowCategoryAvailable: () => boolean;
+
+    // Whether follow category is available or not.
+    ngIsFollowCategoryAvailable: () => boolean;
+
+    ngOnFollowCategoryClicked: (categoryId: number) => void;
+
+    ngOnUnfollowCategoryClicked: (categoryId: number) => void;
 
     //#endregion
 

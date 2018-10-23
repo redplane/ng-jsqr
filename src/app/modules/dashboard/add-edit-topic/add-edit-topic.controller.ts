@@ -11,6 +11,7 @@ import {IUiService} from "../../../interfaces/services/ui-service.interface";
 import {ITopicService} from "../../../interfaces/services/topic-service.interface";
 import {ItemStatus} from "../../../enums/item-status.enum";
 import {AddEditTopicResolver} from "./add-edit-topic.resolver";
+import {CategoryDetailStateParam} from "../../../models/params/category-detail.state-param";
 
 /* @ngInject */
 export class AddEditTopicController implements IController {
@@ -108,8 +109,10 @@ export class AddEditTopicController implements IController {
             return;
         }
 
+        let categoryDetailStateParam = new CategoryDetailStateParam();
+        categoryDetailStateParam.categoryId = this.$scope.category.id;
         // Redirect to topics page.
-        this.$state.go(UrlStateConstant.categoryDetailModuleName);
+        this.$state.go(UrlStateConstant.categoryDetailModuleName, categoryDetailStateParam);
 
     };
 

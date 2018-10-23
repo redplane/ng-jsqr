@@ -13,6 +13,7 @@ import {LoadCategoryViewModel} from "../../../../view-models/load-category.view-
 import {IUserService} from "../../../../interfaces/services/user-service.interface";
 import {StateService} from "@uirouter/core";
 import {UrlStateConstant} from "../../../../constants/url-state.constant";
+import {User} from "../../../../models/entities/user";
 
 /* @ngInject */
 export class ProfileTopicController implements IController {
@@ -46,6 +47,8 @@ export class ProfileTopicController implements IController {
         $scope.ngOnViewTopicClicked = this._ngOnViewTopicClicked;
         $scope.ngOnEditTopicClicked = this._ngOnEditTopicClicked;
         $scope.ngOnDeleteTopicClicked = this._ngOnDeleteTopicClicked;
+
+
     }
 
     //#endregion

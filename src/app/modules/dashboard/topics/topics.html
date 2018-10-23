@@ -13,20 +13,39 @@
     <!--Forum description-->
     <div>
         <h1 class="topics-title">
-            <a href>
+            <span>
                 {{category.name}}
-            </a>
+            </span>
+            <span ng-if="bIsCategoryFollowed" class="fa fa-heart text-danger"></span>
         </h1>
     </div>
 
     <!--Add topic & pagination-->
     <div class="row">
         <div class="col-xs-4">
-            <button class="btn btn-primary btn-add-topic"
-                    ng-click="ngOnAddTopicClicked()">
-                <span class="fa fa-plus"></span>
-                <span>{{'TITLE_NEW_TOPIC' | translate}}</span>
-            </button>
+            <div class="dropdown"
+                 ng-if="ngIsActionPanelAvailable()">
+                <button class="btn btn-default dropdown-toggle"
+                        type="button"
+                        id="dropdownMenu1"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="true">
+                    {{'TITLE_ACTION' | translate}}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li ng-click="ngOnAddTopicClicked()">
+                        <a href><span class="fa fa-file-o"></span> {{'TITLE_NEW_TOPIC' | translate}}</a>
+                    </li>
+                    <li ng-if="ngIsFollowCategoryAvailable()" ng-click="ngOnFollowCategoryClicked(category.id)">
+                        <a href><span class="fa fa-heart"></span> {{'TITLE_FOLLOW' | translate}}</a>
+                    </li>
+                    <li ng-if="ngIsUnfollowCategoryAvailable()" ng-click="ngOnUnfollowCategoryClicked(category.id)">
+                        <a href><span class="fa fa-trash"></span> {{'TITLE_UNFOLLOW' | translate}}</a>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class="col-xs-8">
             <div class="text-right">
@@ -78,7 +97,8 @@
                                 </div>
                                 <div>
                                     &raquo; <a href>
-                                    <small>{{topic.createdTime | amUtc | amLocal | amDateFormat:'MM/DD/YYYY HH:mm'}}</small>
+                                    <small>{{topic.createdTime | amUtc | amLocal | amDateFormat:'MM/DD/YYYY HH:mm'}}
+                                    </small>
                                 </a>
                                 </div>
                             </div>
@@ -111,11 +131,29 @@
     <!--Add topic & pagination-->
     <div class="row">
         <div class="col-xs-4">
-            <button class="btn btn-primary btn-add-topic"
-                    ng-click="ngOnAddTopicClicked()">
-                <span class="fa fa-plus"></span>
-                <span>{{'TITLE_NEW_TOPIC' | translate}}</span>
-            </button>
+            <div class="dropup" id="bottom-action-panel"
+                 ng-if="ngIsActionPanelAvailable()">
+                <button class="btn btn-default dropdown-toggle"
+                        type="button"
+                        id="dropupMenu1"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="true">
+                    {{'TITLE_ACTION' | translate}}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropupMenu1">
+                    <li ng-click="ngOnAddTopicClicked()">
+                        <a href><span class="fa fa-file-o"></span> {{'TITLE_NEW_TOPIC' | translate}}</a>
+                    </li>
+                    <li ng-if="ngIsFollowCategoryAvailable()">
+                        <a href><span class="fa fa-heart"></span> {{'TITLE_FOLLOW' | translate}}</a>
+                    </li>
+                    <li ng-if="ngIsUnfollowCategoryAvailable()">
+                        <a href><span class="fa fa-trash"></span> {{'TITLE_UNFOLLOW' | translate}}</a>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class="col-xs-8">
             <div class="text-right">
@@ -138,4 +176,5 @@
             </li>
         </ol>
     </div>
+
 </div>

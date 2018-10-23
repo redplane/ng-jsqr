@@ -42,7 +42,7 @@ export class FollowingCategoryService implements IFollowingCategoryService {
 
     // Start following category.
     public followCategory(categoryId: number): IPromise<FollowingCategory> {
-        let url = `${this.appSettingConstant.apiEndPoint}/api/follow-topic/${categoryId}`;
+        let url = `${this.appSettingConstant.apiEndPoint}/api/follow-category/${categoryId}`;
         return this.$http
             .post(url, {})
             .then((followCategoryResponse: IHttpResponse<FollowingCategory>) => {

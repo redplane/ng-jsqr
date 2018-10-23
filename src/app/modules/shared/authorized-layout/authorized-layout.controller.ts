@@ -112,11 +112,13 @@ export class AuthorizedLayoutController implements IController {
             });
 
         // Load user notifications.
-        this.$notificationMessage
-            .loadNotificationMessages(this.$scope.loadNotificationMessagesCondition)
-            .then((loadNotificationMessageResult: SearchResult<NotificationMessage>) => {
-                this.$scope.loadUnreadNotificationMessagesResult = loadNotificationMessageResult;
-            });
+        if (this.profile) {
+            this.$notificationMessage
+                .loadNotificationMessages(this.$scope.loadNotificationMessagesCondition)
+                .then((loadNotificationMessageResult: SearchResult<NotificationMessage>) => {
+                    this.$scope.loadUnreadNotificationMessagesResult = loadNotificationMessageResult;
+                });
+        }
     };
 
     // Called when user public channel raises an event.

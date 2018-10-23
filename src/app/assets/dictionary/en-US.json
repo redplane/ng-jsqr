@@ -61,6 +61,9 @@
   "TITLE_SIGNATURE": "Signature",
   "TITLE_EDIT_SIGNATURE": "Edit signature",
   "TITLE_USER_SIGNATURE": "User signature",
+  "TITLE_ACTION": "Action",
+  "TITLE_FOLLOW": "Follow",
+  "TITLE_UNFOLLOW": "Unfollow",
 
   "MSG_FIELD_REQUIRED": "This field is required",
   "MSG_REQUEST_RESET_PASSWORD_SUCCESSFULLY": "A reset password email has been sent to you. Please check your inbox.",
@@ -73,5 +76,7 @@
   "MSG_ERROR_HAPPENED_WHILE_SIGN_IN_GOOGLE": "Something wrong with Google sign-in",
   "MSG_ERROR_HAPPENED_WHILE_SIGN_IN_FACEBOOK": "Something wrong with Facebook sign-in",
   "MSG_UNFOLLOWED_CATEGORY_SUCCESSFULLY": "You have stopped following category {{name}}.",
-  "MSG_UNFOLLOWED_TOPIC_SUCCESSFULLY": "You have stopped following topic {{name}}."
+  "MSG_UNFOLLOWED_TOPIC_SUCCESSFULLY": "You have stopped following topic {{name}}.",
+  "MSG_YOU_HAVE_FOLLOWED_CATEGORY": "You have followed category {{name}}.",
+  "MSG_YOU_HAVE_UNSUBSCRIBED_CATEGORY": "You have unsubscribed category {{name}}."
 }

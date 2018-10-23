@@ -17,6 +17,11 @@ import {PaginationConstant} from "../../../constants/pagination.constant";
 import {CategoryGroupDetailResolver} from "../../../models/resolvers/category-group-detail.resolver";
 import {TopicSummary} from "../../../models/entities/topic-summary";
 import {LoadTopicSummaryViewModel} from "../../../view-models/load-topic-summary.view-model";
+import {IFollowingCategoryService} from "../../../interfaces/services/following-category-service.interface";
+import {LoadFollowingCategoryViewModel} from "../../../view-models/following-category/load-following-category.view-model";
+import {FollowingCategory} from "../../../models/entities/following-category";
+import {ItemStatus} from "../../../enums/item-status.enum";
+import {IToastrService} from "angular-toastr";
 
 /* @ngInject */
 export class TopicsController implements IController {
@@ -32,8 +37,10 @@ export class TopicsController implements IController {
     * */
     public constructor(public $scope: ITopicsScope,
                        public $state: StateService,
-                       public $topic: ITopicService, public $user: IUserService,
+                       public $topic: ITopicService, public $user: IUserService, public $followingCategory: IFollowingCategoryService,
                        public $ui: IUiService, public $q: IQService,
+                       public $translate: angular.translate.ITranslateService, public toastr: IToastrService,
+                       public profile: User,
                        public routeResolver: CategoryGroupDetailResolver) {
 
         $scope.loadTopicsResult = new SearchResult<Topic>();
@@ -60,6 +67,14 @@ export class TopicsController implements IController {
         $scope.ngOnHomeClicked = this._ngOnHomeClicked;
         $scope.ngGetTopicFollowersSummary = this._ngGetTopicFollowersSummary;
         $scope.ngGetTopicRepliesSummary = this._ngGetTopicRepliesSummary;
+
+        $scope.ngIsUnfollowCategoryAvailable = this._ngIsUnfollowCategoryAvailable;
+        $scope.ngIsFollowCategoryAvailable = this._ngIsFollowCategoryAvailable;
+        $scope.ngIsActionPanelAvailable = this._ngIsActionPanelAvailable;
+        $scope.ngOnUnfollowCategoryClicked = this._ngOnUnfollowCategoryClicked;
+        $scope.ngOnFollowCategoryClicked = this._ngOnFollowCategoryClicked;
+
+        $scope.bIsCategoryFollowed = false;
     }
 
     //#endregion
@@ -77,7 +92,28 @@ export class TopicsController implements IController {
         // Reset pagination.
         this.$scope.loadTopicsCondition.pagination.page = 1;
 
-        this._loadTopics()
+        const loadFollowingCategoryCondition = new LoadFollowingCategoryViewModel();
+        loadFollowingCategoryCondition.categoryIds = [this.$scope.category.id];
+        loadFollowingCategoryCondition.statuses = [ItemStatus.available];
+        loadFollowingCategoryCondition.pagination = new Pagination();
+        loadFollowingCategoryCondition.pagination.page = 1;
+        loadFollowingCategoryCondition.pagination.records = 1;
+
+        let loadFollowingCategoryPromise = this.$followingCategory
+            .loadFollowingCategories(loadFollowingCategoryCondition)
+            .then((loadFollowingCategoriesResult: SearchResult<FollowingCategory>) => {
+                if (!loadFollowingCategoriesResult || !loadFollowingCategoriesResult.records || !loadFollowingCategoriesResult.records.length){
+                    this.$scope.bIsCategoryFollowed = false;
+                    return;
+                }
+
+                this.$scope.bIsCategoryFollowed = true;
+            });
+
+        let loadCategoryTopicsPromise = this._loadTopics();
+
+        this.$q
+            .all([loadFollowingCategoryPromise, loadCategoryTopicsPromise])
             .finally(() => {
                 this.$ui.unblockAppUI();
             });
@@ -87,7 +123,17 @@ export class TopicsController implements IController {
     * Called when add topic button is clicked.
     * */
     private _ngOnAddTopicClicked = (): void => {
-        this.$state.go(UrlStateConstant.addTopicModuleName, {categoryId: this.$scope.category.id});
+
+        this.$ui.blockAppUI();
+
+        this.$state
+            .go(UrlStateConstant.addTopicModuleName, {categoryId: this.$scope.category.id})
+            .then(() => {
+                this.$ui.unblockAppUI();
+            })
+            .catch(() => {
+                this.$ui.unblockAppUI();
+            });
     };
 
     /*
@@ -244,8 +290,76 @@ export class TopicsController implements IController {
             return 0;
 
         return mTopicIdToTopicSummary[topicId].totalFollower || 0;
-    }
+    };
 
+    // Check whether current user is authenticated or not.
+    private _ngIsUserAuthenticated = (): boolean => {
+        if (!this.profile)
+            return false;
+
+        return true;
+    };
+
+    // Whether unfollow category is available or not.
+    private _ngIsUnfollowCategoryAvailable = (): boolean => {
+        if (!this._ngIsUserAuthenticated())
+            return false;
+
+        if (!this.$scope.bIsCategoryFollowed)
+            return false;
+
+        return true;
+    };
+
+    // Whether follow category is available or not.
+    private _ngIsFollowCategoryAvailable = (): boolean => {
+        if (!this._ngIsUserAuthenticated())
+            return false;
+
+        if (this.$scope.bIsCategoryFollowed)
+            return false;
+
+        return true;
+    };
+
+    // Whether action panel is available or not.
+    private _ngIsActionPanelAvailable = (): boolean => {
+        if (!this._ngIsUserAuthenticated())
+            return false;
+
+        return true;
+    };
+
+    // Called when on follow category is clicked.
+    private _ngOnFollowCategoryClicked = (categoryId: number): void => {
+        this.$ui.blockAppUI();
+
+        this.$followingCategory
+            .followCategory(categoryId)
+            .then(() => {
+                let message = this.$translate.instant('MSG_YOU_HAVE_FOLLOWED_CATEGORY', this.$scope.category);
+                this.toastr.success(message);
+                this.$scope.bIsCategoryFollowed = true;
+            })
+            .finally(() => {
+                this.$ui.unblockAppUI();
+            })
+    };
+
+    // Called when unfollow category is clicked.
+    private _ngOnUnfollowCategoryClicked = (categoryId: number): void => {
+        this.$ui.unblockAppUI();
+        this.$followingCategory
+            .stopFollowingCategory(categoryId)
+            .then(() => {
+                let message = this.$translate.instant('MSG_YOU_HAVE_UNSUBSCRIBED_CATEGORY', this.$scope.category);
+                this.toastr.success(message);
+                this.$scope.bIsCategoryFollowed = false;
+            })
+            .finally(() => {
+                this.$ui.unblockAppUI();
+            })
+    };
 
     //#endregion
 }
