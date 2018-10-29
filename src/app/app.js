@@ -21,7 +21,6 @@ require('jquery');
 require('bluebird');
 require('bootstrap');
 require('moment');
-require('pusher-js');
 require('tinymce');
 require('tinymce/themes/modern');
 const firebase = require('firebase');

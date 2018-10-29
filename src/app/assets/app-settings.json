@@ -10,6 +10,17 @@
 
 
   "apiKeyPusher": "4b7872f37a986b55f50b",
-  "clusterPusher": "ap1"
+  "clusterPusher": "ap1",
+
+  "cloudMessaging": {
+    "webApiKey": "BOnpLotjnjgELQfS93wBKwUAcX7qMG4vZHdKhXoOnBEFh6REFbRbcX14g8lcM7vj4DfEZ3NoLlgXjJdPILs50QA",
+    "serviceWorkerPath": "/assets/firebase-messaging-sw.js",
+    "messagingSenderId": "772965944359"
+  },
+
+  "hub": {
+    "baseHubEndPoint": "http://localhost:61356",
+    "hubNotification": "hub/notification"
+  }
 
 }

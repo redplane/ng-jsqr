@@ -224,7 +224,7 @@ export class UserService implements IUserService {
                     throw 'Cannot update user signature.';
 
                 return addUserSignatureResponse.data;
-            })
+            });
     };
 
     //#endregion

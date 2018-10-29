@@ -1,3 +1,6 @@
+import {CloudMessagingOption} from "./cloud-messaging-option";
+import {HubOption} from "./hub-option";
+
 export class AppSetting {
 
     public apiEndPoint: string = '';
@@ -15,4 +18,8 @@ export class AppSetting {
     public apiKeyPusher: string = '';
 
     public clusterPusher: string = '';
+
+    public cloudMessaging: CloudMessagingOption = new CloudMessagingOption();
+
+    public hub: HubOption = new HubOption();
 }

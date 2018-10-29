@@ -40,8 +40,6 @@ export class AuthorizedLayoutModule {
                     return $q((resolve) => {
                         require.ensure([], () => {
 
-                            // Load pusher library.
-                            require('pusher-js');
                             const {RealTimeService} = require('../../../services/real-time.service');
 
                             // load only controller module

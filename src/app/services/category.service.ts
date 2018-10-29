@@ -5,6 +5,7 @@ import {Category} from "../models/entities/category";
 import {IHttpResponse, IHttpService, IPromise} from "angular";
 import {LoadCategorySummaryViewModel} from "../view-models/category/load-category-summary.view-model";
 import {CategorySummary} from "../models/entities/category-summary";
+import {AppSetting} from "../models/app-setting";
 
 /* @ngInject */
 export class CategoryService implements ICategoryService {
@@ -12,7 +13,7 @@ export class CategoryService implements ICategoryService {
     //#region Constructors
 
     public constructor(public $http: IHttpService,
-                       public appSettingConstant: any){
+                       public appSettingConstant: AppSetting){
 
     }
 

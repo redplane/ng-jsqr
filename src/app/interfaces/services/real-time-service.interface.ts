@@ -1,15 +1,11 @@
-import {IPromise, IScope} from "angular";
-import {Channel} from "pusher-js";
+import {IPromise} from "angular";
 
 export interface IRealTimeService {
 
     //#region Methods
 
-    // Initialize real-time connection.
-    initRealTimeConnection(): IPromise<void>;
-
-    // Add listener to a specific channel.
-    hookChannel(channelName: string): Channel;
+    // Add user device for push notification.
+    addUserDevice(deviceTokenId: string): IPromise<void>;
 
     //#endregion
 }

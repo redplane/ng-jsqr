@@ -1,4 +1,4 @@
-import {IController, IScope, ITimeoutService, IWindowService} from "angular";
+import {IController, IQService, IScope, ITimeoutService, IWindowService} from "angular";
 import {IAuthorizedLayoutScope} from "./authorized-layout.scope";
 import {StateService} from "@uirouter/core";
 import {UrlStateConstant} from "../../../constants/url-state.constant";
@@ -6,9 +6,6 @@ import {User} from "../../../models/entities/user";
 import {ILocalStorageService} from "angular-local-storage";
 import {LocalStorageKeyConstant} from "../../../constants/local-storage-key.constant";
 import {IRealTimeService} from "../../../interfaces/services/real-time-service.interface";
-import {RealTimeConstant} from "../../../constants/real-time.constant";
-import {RealTimeEventConstant} from "../../../constants/real-time-event.constant";
-import {Channel} from "pusher-js";
 import {Pagination} from "../../../models/pagination";
 import {PaginationConstant} from "../../../constants/pagination.constant";
 import {LoadNotificationMessageViewModel} from "../../../view-models/notification-message/load-notification-message.view-model";
@@ -17,21 +14,23 @@ import {SearchResult} from "../../../models/search-result";
 import {NotificationMessage} from "../../../models/entities/notification-message";
 import {NotificationMessageStatus} from "../../../enums/notification-message-status.enum";
 import {ProfileStateParam} from "../../../models/params/profile.state-param";
+import * as firebase from "firebase";
+import * as signalR from '@aspnet/signalr';
+import {AppSetting} from "../../../models/app-setting";
+import {IUserService} from "../../../interfaces/services/user-service.interface";
+import {TokenViewModel} from "../../../view-models/users/token.view-model";
+
 
 /* @ngInject */
 export class AuthorizedLayoutController implements IController {
 
-    //#region Properties
-
-    private _publicUserChannel: Channel;
-
-    //#endregion
-
     //#region Constructors
 
     public constructor(public profile: User,
+                       public appSettingConstant: AppSetting, public $q: IQService,
                        public $realTime: IRealTimeService, public $notificationMessage: INotificationMessageService,
                        public $state: StateService, public localStorageService: ILocalStorageService,
+                       public $user: IUserService,
                        public $scope: IAuthorizedLayoutScope,
                        public $window: IWindowService, public $timeout: ITimeoutService,
                        public $rootScope: IScope) {
@@ -94,36 +93,19 @@ export class AuthorizedLayoutController implements IController {
     // Register real-time channels.
     private _ngOnInit = () => {
 
-        // Initialize real-time connection.
-        this.$realTime
-            .initRealTimeConnection()
-            .then(() => {
-                console.log('Real-time connection has been established.');
-
-                // Broadcast an event to all component.
-                this.$rootScope.$broadcast(RealTimeConstant.addRealTimeSubscriberEventConstant);
-
-                // Hook to user channel.
-                this._publicUserChannel = this.$realTime.hookChannel(RealTimeConstant.publicUserChannelName);
-                this._publicUserChannel.bind(RealTimeEventConstant.addedTopic, this._ngOnPublicUserChannelRaiseEvent);
-            })
-            .catch(() => {
-                console.log('Something wrong while establishing real-time connection.')
-            });
-
         // Load user notifications.
         if (this.profile) {
+
+            // Load notification message.
             this.$notificationMessage
                 .loadNotificationMessages(this.$scope.loadNotificationMessagesCondition)
                 .then((loadNotificationMessageResult: SearchResult<NotificationMessage>) => {
                     this.$scope.loadUnreadNotificationMessagesResult = loadNotificationMessageResult;
                 });
-        }
-    };
 
-    // Called when user public channel raises an event.
-    private _ngOnPublicUserChannelRaiseEvent = (data: any): void => {
-        console.log(data);
+            this._ngRegisterRealTimeCommunicationHandlers();
+            this._ngRegisterCloudMessagingServiceWorker();
+        }
     };
 
     // Called when see message is clicked.
@@ -133,5 +115,82 @@ export class AuthorizedLayoutController implements IController {
         this.$state.go(UrlStateConstant.profileNotificationsModuleName, params);
     };
 
+    /*
+  * Register real-time
+  * */
+    private _ngRegisterRealTimeCommunicationHandlers(): void {
+        const hubOption = this.appSettingConstant.hub;
+        let connection = new signalR
+            .HubConnectionBuilder()
+            .withUrl(`${hubOption.baseHubEndPoint}/${hubOption.hubNotification}`, {
+                accessTokenFactory: () => {
+                    let authenticationToken = this.localStorageService.get<TokenViewModel>(LocalStorageKeyConstant.accessTokenKey);
+                    return authenticationToken.accessToken;
+                }
+            })
+            .build();
+
+        connection.start()
+            .then(() => {
+                console.log('Real-time connection has been established.');
+            });
+    }
+
+    // Register cloud messaging service worker.
+    private _ngRegisterCloudMessagingServiceWorker(): void {
+
+        // Get cloud messaging configuration.
+        let cloudMessaging = this.appSettingConstant.cloudMessaging;
+        if (!cloudMessaging || !cloudMessaging.messagingSenderId || !cloudMessaging.webApiKey) {
+            console.log('Cloud messaging configuration is invalid. Skipping cloud messaging configuration...');
+            return;
+        }
+
+        // Initialize firebase app.
+        firebase
+            .initializeApp({
+                messagingSenderId: cloudMessaging.messagingSenderId
+            });
+
+        // Get messaging instance.
+        const messaging = firebase.messaging();
+        messaging.usePublicVapidKey(cloudMessaging.webApiKey);
+
+        let firebaseServiceWorkerPath = 'firebase-messaging-sw.js';
+        if (cloudMessaging.serviceWorkerPath)
+            firebaseServiceWorkerPath = cloudMessaging.serviceWorkerPath;
+
+        // Add additional data to service worker.
+        firebaseServiceWorkerPath += `?messagingSenderId=${cloudMessaging.messagingSenderId}`;
+
+        let pAddServiceWorkerTask = this.$q(resolve => {
+            navigator
+                .serviceWorker
+                .register(firebaseServiceWorkerPath)
+                .then((serviceWorkerRegistration: ServiceWorkerRegistration) => {
+                    messaging.useServiceWorker(serviceWorkerRegistration);
+                    resolve();
+                });
+        });
+
+        // Called when firebase cloud messaging attached to a specific service worker.
+        pAddServiceWorkerTask
+            .then(() => {
+                return messaging
+                    .requestPermission();
+            })
+            .then(() => {
+                return messaging
+                    .getToken();
+            })
+            .then((deviceTokenId: any) => {
+                console.log(`Device token = ${deviceTokenId}`);
+                return this.$realTime
+                    .addUserDevice(deviceTokenId);
+            })
+            .catch((exception) => {
+                console.log('Unable to get permission to notify.', exception);
+            });
+    }
     //#endregion
 }
