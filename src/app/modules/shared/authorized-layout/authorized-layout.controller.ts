@@ -130,6 +130,10 @@ export class AuthorizedLayoutController implements IController {
             })
             .build();
 
+        connection.on('event_add-user-account', (data: any) => {
+            console.log(data);
+        });
+
         connection.start()
             .then(() => {
                 console.log('Real-time connection has been established.');
