@@ -7,7 +7,4 @@ module.exports = (ngModule) => {
 
     const {PaginationConfiguration} = require('./pagination.configuration');
     ngModule.config((uibPaginationConfig) => new PaginationConfiguration(uibPaginationConfig));
-
-    const {ReCaptchaConfiguration} = require('./re-captcha.configuration');
-    ngModule.config((appSettingConstant, vcRecaptchaServiceProvider) => new ReCaptchaConfiguration(appSettingConstant, vcRecaptchaServiceProvider));
 };

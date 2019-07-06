@@ -3,16 +3,9 @@
 // Css imports.
 require('../../node_modules/bootstrap/dist/css/bootstrap.css');
 
-// AdminLTE
-require('../../node_modules/admin-lte/dist/css/AdminLTE.css');
-require('../../node_modules/admin-lte/dist/css/skins/skin-green-light.css');
-
 // Font awesome.
 require('../../node_modules/font-awesome/css/font-awesome.css');
 
-
-require('../../node_modules/ui-cropper/compile/unminified/ui-cropper.css');
-require('../../node_modules/tinymce/skins/lightgray/skin.min.css');
 
 require('./styles/app.scss');
 
@@ -20,11 +13,6 @@ require('./styles/app.scss');
 require('jquery');
 require('bluebird');
 require('bootstrap');
-require('moment');
-require('tinymce');
-require('tinymce/themes/modern');
-const firebase = require('firebase');
-require('firebase/messaging');
 
 
 $.ajax({
@@ -34,9 +22,6 @@ $.ajax({
     cache: false,
     crossDomain: false,
     success: (loadAppOptionResponse) => {
-
-        // Import angular plugin css.
-        require('../../node_modules/angular-confirm1/css/angular-confirm.css');
         require('../../node_modules/angular-toastr/dist/angular-toastr.css');
         require('../../node_modules/angular-block-ui/dist/angular-block-ui.css');
 
@@ -49,24 +34,18 @@ $.ajax({
         require('angular-toastr');
         require('angular-translate');
         require('angular-translate-loader-static-files');
-        require('angular-moment');
         require('angular-ui-bootstrap');
         require('angular-sanitize');
-        require('angular-confirm1');
         require('angular-messages');
-        require('angular-ui-tinymce');
         require('angular-local-storage');
-        require('angular-recaptcha');
-        require('angular-slimscroll');
 
         // Bind the app setting to window object.
         window['_ngAppOptions'] = loadAppOptionResponse;
 
         // Module declaration.
         let ngModule = angular.module('ngApp', ['ui.router', 'blockUI', 'toastr',
-            'ui.bootstrap', 'ngMessages', 'oc.lazyLoad', 'vcRecaptcha',
-            'pascalprecht.translate', 'angularMoment', 'ngSanitize', 'ui.tinymce',
-            'cp.ngConfirm', 'LocalStorageModule', 'ngSlimScroll']);
+            'ui.bootstrap', 'ngMessages', 'oc.lazyLoad',
+            'pascalprecht.translate', 'ngSanitize', 'LocalStorageModule']);
 
         // Import url state constant
         const UrlStateConstant = require('./constants/url-state.constant.ts').UrlStateConstant;
@@ -103,9 +82,6 @@ $.ajax({
         // Factories import.
         require('./factories')(ngModule);
 
-        // Filters import.
-        require('./filters')(ngModule);
-
         // Services import.
         require('./services')(ngModule);
 
@@ -113,7 +89,8 @@ $.ajax({
         require('./directives')(ngModule);
 
         // Module requirements.
-        require('./modules')(ngModule);
+        const {AppModule} = require('./modules/index.ts');
+        new AppModule(ngModule);
 
         // Manually bootstrap the application.
         angular.bootstrap(document, ['ngApp']);

@@ -85,7 +85,7 @@ export class UrlStateConstant {
     public static accountForgotPasswordModuleUrl: string = '/forgot-password';
 
     // Authorized layout module name.
-    public static authorizedLayoutModuleName: string = 'authorized-layout';
+    public static authorizedLayoutModuleName: string = 'master-layout';
 
     // Unauthorized layout module name.
     public static unauthorizedLayoutModuleName: string = 'unauthorized-layout';

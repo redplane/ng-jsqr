@@ -1,4 +1,5 @@
 import {IUiService} from "../interfaces/services/ui-service.interface";
+declare var $: any;
 
 /* @ngInject */
 export class UiService implements IUiService {
